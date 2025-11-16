@@ -1,0 +1,108 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { Menu, X } from 'lucide-react'
+import { cn } from '@/lib/utils'
+
+const navLinks = [
+  { href: '#services', label: 'Services' },
+  { href: '#about', label: 'Why Us' },
+  { href: '#portfolio', label: 'Portfolio' },
+  { href: '#contact', label: 'Contact' },
+]
+
+export function Navigation() {
+  const [isScrolled, setIsScrolled] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 100)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  return (
+    <nav
+      className={cn(
+        'fixed top-0 z-50 w-full transition-all duration-300',
+        isScrolled
+          ? 'bg-background/95 backdrop-blur-lg border-b border-primary/10 py-4'
+          : 'bg-background/80 backdrop-blur-md border-b border-primary/10 py-6'
+      )}
+    >
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between">
+          <Link
+            href="/"
+            className="font-display text-2xl font-extrabold hover:scale-105 transition-transform"
+          >
+            <span className="text-purple-500">monx</span>
+            <span className="text-foreground">digit</span>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <ul className="hidden md:flex items-center gap-8">
+            {navLinks.map((link) => (
+              <li key={link.href}>
+                <a
+                  href={link.href}
+                  className="text-muted-foreground hover:text-foreground font-medium text-sm transition-colors relative group"
+                >
+                  {link.label}
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full" />
+                </a>
+              </li>
+            ))}
+          </ul>
+
+          <a
+            href="#contact"
+            className="hidden md:inline-flex items-center justify-center rounded-full bg-gradient-to-r from-accent to-accent/80 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-accent/30 transition-all hover:shadow-xl hover:shadow-accent/50 hover:-translate-y-0.5"
+          >
+            Book a Call
+          </a>
+
+          {/* Mobile Menu Toggle */}
+          <button
+            className="md:hidden p-2 text-foreground"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden mt-4 pb-4 border-t border-primary/10 pt-4">
+            <ul className="flex flex-col gap-4">
+              {navLinks.map((link) => (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    className="block text-muted-foreground hover:text-foreground font-medium"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+              <li>
+                <a
+                  href="#contact"
+                  className="block w-full text-center rounded-full bg-gradient-to-r from-accent to-accent/80 px-6 py-2.5 text-sm font-semibold text-white"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Book a Call
+                </a>
+              </li>
+            </ul>
+          </div>
+        )}
+      </div>
+    </nav>
+  )
+}
