@@ -1,0 +1,178 @@
+'use client'
+
+import { useState } from 'react'
+import { motion } from 'framer-motion'
+import { Mail, MessageSquare, Globe, Loader2 } from 'lucide-react'
+import { useToast } from '@/hooks/use-toast'
+import { submitContactForm } from '@/app/actions/contact'
+
+export function Contact() {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const { toast } = useToast()
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setIsSubmitting(true)
+
+    const formData = new FormData(e.currentTarget)
+    const result = await submitContactForm(formData)
+
+    if (result.success) {
+      toast({
+        title: 'Message sent!',
+        description: 'We\'ll get back to you shortly.',
+      })
+      e.currentTarget.reset()
+    } else {
+      toast({
+        title: 'Error',
+        description: result.error || 'Something went wrong. Please try again.',
+        variant: 'destructive',
+      })
+    }
+
+    setIsSubmitting(false)
+  }
+
+  return (
+    <section id="contact" className="py-20 sm:py-32 px-4 bg-gradient-to-br from-primary/5 via-background to-accent/5 border-t border-primary/10">
+      <div className="container mx-auto max-w-4xl">
+        <motion.div
+          className="text-center mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
+          <div className="text-primary text-sm font-bold uppercase tracking-wider mb-4">
+            Let's Connect
+          </div>
+          <h2 className="font-display text-4xl sm:text-5xl font-extrabold mb-4">
+            Ready to Grow Your Business?
+          </h2>
+          <p className="text-lg text-muted-foreground">
+            Book a free consultation to discuss how we can help you reach your target audience and achieve your marketing goals.
+          </p>
+        </motion.div>
+
+        <motion.div
+          className="bg-card border border-primary/10 rounded-2xl p-8 sm:p-12 mb-12"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          viewport={{ once: true }}
+        >
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label htmlFor="name" className="block text-sm font-semibold mb-2">
+                Your Name
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                required
+                className="w-full px-4 py-3 bg-background border border-primary/20 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+                placeholder="John Doe"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="email" className="block text-sm font-semibold mb-2">
+                Email Address
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                required
+                className="w-full px-4 py-3 bg-background border border-primary/20 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+                placeholder="john@example.com"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="business" className="block text-sm font-semibold mb-2">
+                Business Name
+              </label>
+              <input
+                type="text"
+                id="business"
+                name="business"
+                className="w-full px-4 py-3 bg-background border border-primary/20 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+                placeholder="Your Company"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="message" className="block text-sm font-semibold mb-2">
+                Tell us about your goals
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                required
+                rows={5}
+                className="w-full px-4 py-3 bg-background border border-primary/20 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all resize-none"
+                placeholder="I'm looking to increase leads for my e-commerce store..."
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full bg-gradient-to-r from-accent to-accent/80 text-white font-semibold py-4 px-8 rounded-full shadow-lg shadow-accent/30 hover:shadow-xl hover:shadow-accent/50 hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex items-center justify-center gap-2"
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Sending...
+                </>
+              ) : (
+                'Book Your Free Consultation'
+              )}
+            </button>
+          </form>
+        </motion.div>
+
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          viewport={{ once: true }}
+        >
+          <div className="text-center">
+            <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full mb-3">
+              <Mail className="w-6 h-6 text-primary" />
+            </div>
+            <h4 className="font-display font-bold text-primary mb-1">Email</h4>
+            <a href="mailto:hello@monxdigit.com" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+              hello@monxdigit.com
+            </a>
+          </div>
+
+          <div className="text-center">
+            <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full mb-3">
+              <MessageSquare className="w-6 h-6 text-primary" />
+            </div>
+            <h4 className="font-display font-bold text-primary mb-1">Let's Chat</h4>
+            <a href="#contact" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+              Schedule a Call
+            </a>
+          </div>
+
+          <div className="text-center">
+            <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full mb-3">
+              <Globe className="w-6 h-6 text-primary" />
+            </div>
+            <h4 className="font-display font-bold text-primary mb-1">Follow Us</h4>
+            <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+              Social Media
+            </a>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  )
+}
