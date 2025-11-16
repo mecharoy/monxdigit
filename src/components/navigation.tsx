@@ -37,9 +37,10 @@ export function Navigation() {
         <div className="flex items-center justify-between">
           <Link
             href="/"
-            className="font-display text-2xl font-extrabold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent hover:scale-105 transition-transform"
+            className="font-display text-2xl font-extrabold hover:scale-105 transition-transform"
           >
-            monxdigit
+            <span className="text-purple-500">monx</span>
+            <span className="text-foreground">digit</span>
           </Link>
 
           {/* Desktop Navigation */}

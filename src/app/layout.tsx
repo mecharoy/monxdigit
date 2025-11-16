@@ -1,17 +1,17 @@
 import type { Metadata } from 'next'
-import { Syne, Manrope } from 'next/font/google'
+import { Outfit, DM_Sans } from 'next/font/google'
 import './globals.css'
 import { Toaster } from '@/components/ui/toaster'
 
-const syne = Syne({
+const outfit = Outfit({
   subsets: ['latin'],
-  variable: '--font-syne',
+  variable: '--font-outfit',
   display: 'swap',
 })
 
-const manrope = Manrope({
+const dmSans = DM_Sans({
   subsets: ['latin'],
-  variable: '--font-manrope',
+  variable: '--font-dm-sans',
   display: 'swap',
 })
 
@@ -33,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${syne.variable} ${manrope.variable}`}>
+    <html lang="en" className={`${outfit.variable} ${dmSans.variable}`}>
       <body className="font-body antialiased">
         {children}
         <Toaster />

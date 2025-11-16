@@ -39,8 +39,10 @@ export default function LoginPage() {
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="font-display text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">
-            monxdigit Admin
+          <h1 className="font-display text-3xl font-bold mb-2">
+            <span className="text-purple-500">monx</span>
+            <span className="text-foreground">digit</span>
+            <span className="text-muted-foreground text-2xl ml-2">Admin</span>
           </h1>
           <p className="text-muted-foreground">Enter your password to continue</p>
         </div>

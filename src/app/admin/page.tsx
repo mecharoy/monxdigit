@@ -37,8 +37,10 @@ export default async function AdminPage() {
     <div className="min-h-screen bg-background">
       <header className="border-b border-primary/10 bg-card/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <h1 className="font-display text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            monxdigit Admin
+          <h1 className="font-display text-2xl font-bold">
+            <span className="text-purple-500">monx</span>
+            <span className="text-foreground">digit</span>
+            <span className="text-muted-foreground text-lg ml-2">Admin</span>
           </h1>
           <LogoutButton />
         </div>
