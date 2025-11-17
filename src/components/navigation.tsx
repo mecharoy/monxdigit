@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -37,10 +38,16 @@ export function Navigation() {
         <div className="flex items-center justify-between">
           <Link
             href="/"
-            className="font-display text-2xl font-extrabold hover:scale-105 transition-transform"
+            className="hover:scale-105 transition-transform"
           >
-            <span className="text-primary">monx</span>
-            <span className="text-foreground">digit</span>
+            <Image
+              src="/monxdigit.png"
+              alt="monxdigit"
+              width={150}
+              height={50}
+              className="h-8 w-auto"
+              priority
+            />
           </Link>
 
           {/* Desktop Navigation */}
