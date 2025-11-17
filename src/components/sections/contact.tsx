@@ -147,8 +147,8 @@ export function Contact() {
               <Mail className="w-6 h-6 text-primary" />
             </div>
             <h4 className="font-display font-bold text-primary mb-1">Email</h4>
-            <a href="mailto:hello@monxdigit.com" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-              hello@monxdigit.com
+            <a href="mailto:atulya@monxdigit.com" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+              atulya@monxdigit.com
             </a>
           </div>
 
@@ -157,8 +157,8 @@ export function Contact() {
               <MessageSquare className="w-6 h-6 text-primary" />
             </div>
             <h4 className="font-display font-bold text-primary mb-1">Let's Chat</h4>
-            <a href="#contact" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-              Schedule a Call
+            <a href="https://wa.me/918877734118" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+              88777 34118
             </a>
           </div>
 
