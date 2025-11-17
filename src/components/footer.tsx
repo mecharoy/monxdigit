@@ -7,7 +7,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           <div>
             <h3 className="font-display text-2xl font-extrabold mb-3">
-              <span className="text-purple-500">monx</span>
+              <span className="text-primary">monx</span>
               <span className="text-foreground">digit</span>
             </h3>
             <p className="text-muted-foreground text-sm leading-relaxed">

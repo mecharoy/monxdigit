@@ -24,9 +24,49 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
         >
-          Helping Niche{' '}
+          {'Helping Niche '.split(' ').map((word, wordIndex) => (
+            <span key={`word-${wordIndex}`} className="inline-flex">
+              {word.split('').map((char, charIndex) => (
+                <motion.span
+                  key={`char-${wordIndex}-${charIndex}`}
+                  className="inline-block"
+                  whileHover={{
+                    y: -15,
+                    transition: {
+                      type: "spring",
+                      stiffness: 500,
+                      damping: 10
+                    }
+                  }}
+                >
+                  {char}
+                </motion.span>
+              ))}
+              {wordIndex < 'Helping Niche '.split(' ').length - 1 && '\u00A0'}
+            </span>
+          ))}
           <span className="bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]">
-            Find Their Audience
+            {'Find Their Audience'.split(' ').map((word, wordIndex) => (
+              <span key={`gradient-word-${wordIndex}`} className="inline-flex">
+                {word.split('').map((char, charIndex) => (
+                  <motion.span
+                    key={`gradient-char-${wordIndex}-${charIndex}`}
+                    className="inline-block"
+                    whileHover={{
+                      y: -15,
+                      transition: {
+                        type: "spring",
+                        stiffness: 500,
+                        damping: 10
+                      }
+                    }}
+                  >
+                    {char}
+                  </motion.span>
+                ))}
+                {wordIndex < 'Find Their Audience'.split(' ').length - 1 && '\u00A0'}
+              </span>
+            ))}
           </span>
         </motion.h1>
 
@@ -48,7 +88,7 @@ export function Hero() {
         >
           <a
             href="#contact"
-            className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-accent to-accent/80 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-accent/30 transition-all hover:shadow-xl hover:shadow-accent/50 hover:-translate-y-1"
+            className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-primary to-secondary px-8 py-4 text-base font-semibold text-white shadow-lg shadow-primary/30 transition-all hover:shadow-xl hover:shadow-primary/50 hover:-translate-y-1"
           >
             Start Growing Today
           </a>
