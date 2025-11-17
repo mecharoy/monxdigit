@@ -51,8 +51,8 @@ export function Portfolio() {
               style={{ opacity: 0 }}
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: index * 0.15 }}
-              viewport={{ once: true, amount: 0.2, margin: "0px 0px -100px 0px" }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true, amount: 0.2, margin: "0px 0px -50px 0px" }}
               whileHover={{
                 y: -15,
                 scale: 1.08,
