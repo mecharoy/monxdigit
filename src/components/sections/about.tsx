@@ -57,8 +57,8 @@ export function About() {
                 style={{ opacity: 0 }}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true, amount: 0.3, margin: "0px 0px -50px 0px" }}
+                transition={{ duration: 0.5, delay: index * 0.15 }}
+                viewport={{ once: true, amount: 0.3, margin: "0px 0px -100px 0px" }}
               >
                 <feature.icon className="w-10 h-10 text-primary mb-3" />
                 <h4 className="font-display text-lg font-bold mb-2 text-primary">{feature.title}</h4>

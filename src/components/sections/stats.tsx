@@ -52,8 +52,8 @@ export function Stats() {
               style={{ opacity: 0 }}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true, amount: 0.3, margin: "0px 0px -50px 0px" }}
+              transition={{ duration: 0.5, delay: index * 0.15 }}
+              viewport={{ once: true, amount: 0.3, margin: "0px 0px -100px 0px" }}
             >
               <Counter value={stat.value} prefix={stat.prefix} suffix={stat.suffix} />
               <div className="text-muted-foreground font-medium mt-2">{stat.label}</div>

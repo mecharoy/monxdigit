@@ -69,8 +69,8 @@ export function Services() {
               style={{ opacity: 0 }}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true, amount: 0.2, margin: "0px 0px -50px 0px" }}
+              transition={{ duration: 0.5, delay: index * 0.15 }}
+              viewport={{ once: true, amount: 0.2, margin: "0px 0px -100px 0px" }}
               whileHover={{
                 y: -15,
                 scale: 1.05,
