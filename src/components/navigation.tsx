@@ -43,9 +43,9 @@ export function Navigation() {
             <Image
               src="/monxdigit.png"
               alt="monxdigit"
-              width={150}
-              height={50}
-              className="h-8 w-auto"
+              width={200}
+              height={60}
+              className="h-12 w-auto"
               priority
             />
           </Link>
