@@ -19,23 +19,44 @@ export function Hero() {
         </motion.div>
 
         <motion.h1
-          className="font-display text-5xl sm:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight cursor-pointer"
+          className="font-display text-5xl sm:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          whileHover={{
-            y: -10,
-            scale: 1.05,
-            transition: {
-              type: "spring",
-              stiffness: 400,
-              damping: 10
-            }
-          }}
         >
-          Helping Niche{' '}
+          {'Helping Niche '.split('').map((char, index) => (
+            <motion.span
+              key={`char-${index}`}
+              className="inline-block"
+              whileHover={{
+                y: -15,
+                transition: {
+                  type: "spring",
+                  stiffness: 500,
+                  damping: 10
+                }
+              }}
+            >
+              {char === ' ' ? '\u00A0' : char}
+            </motion.span>
+          ))}
           <span className="bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]">
-            Find Their Audience
+            {'Find Their Audience'.split('').map((char, index) => (
+              <motion.span
+                key={`gradient-char-${index}`}
+                className="inline-block"
+                whileHover={{
+                  y: -15,
+                  transition: {
+                    type: "spring",
+                    stiffness: 500,
+                    damping: 10
+                  }
+                }}
+              >
+                {char === ' ' ? '\u00A0' : char}
+              </motion.span>
+            ))}
           </span>
         </motion.h1>
 
