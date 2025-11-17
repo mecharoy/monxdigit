@@ -24,38 +24,48 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
         >
-          {'Helping Niche '.split('').map((char, index) => (
-            <motion.span
-              key={`char-${index}`}
-              className="inline-block"
-              whileHover={{
-                y: -15,
-                transition: {
-                  type: "spring",
-                  stiffness: 500,
-                  damping: 10
-                }
-              }}
-            >
-              {char === ' ' ? '\u00A0' : char}
-            </motion.span>
+          {'Helping Niche '.split(' ').map((word, wordIndex) => (
+            <span key={`word-${wordIndex}`} className="inline-flex">
+              {word.split('').map((char, charIndex) => (
+                <motion.span
+                  key={`char-${wordIndex}-${charIndex}`}
+                  className="inline-block"
+                  whileHover={{
+                    y: -15,
+                    transition: {
+                      type: "spring",
+                      stiffness: 500,
+                      damping: 10
+                    }
+                  }}
+                >
+                  {char}
+                </motion.span>
+              ))}
+              {wordIndex < 'Helping Niche '.split(' ').length - 1 && '\u00A0'}
+            </span>
           ))}
           <span className="bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]">
-            {'Find Their Audience'.split('').map((char, index) => (
-              <motion.span
-                key={`gradient-char-${index}`}
-                className="inline-block"
-                whileHover={{
-                  y: -15,
-                  transition: {
-                    type: "spring",
-                    stiffness: 500,
-                    damping: 10
-                  }
-                }}
-              >
-                {char === ' ' ? '\u00A0' : char}
-              </motion.span>
+            {'Find Their Audience'.split(' ').map((word, wordIndex) => (
+              <span key={`gradient-word-${wordIndex}`} className="inline-flex">
+                {word.split('').map((char, charIndex) => (
+                  <motion.span
+                    key={`gradient-char-${wordIndex}-${charIndex}`}
+                    className="inline-block"
+                    whileHover={{
+                      y: -15,
+                      transition: {
+                        type: "spring",
+                        stiffness: 500,
+                        damping: 10
+                      }
+                    }}
+                  >
+                    {char}
+                  </motion.span>
+                ))}
+                {wordIndex < 'Find Their Audience'.split(' ').length - 1 && '\u00A0'}
+              </span>
             ))}
           </span>
         </motion.h1>
