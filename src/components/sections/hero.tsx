@@ -19,10 +19,19 @@ export function Hero() {
         </motion.div>
 
         <motion.h1
-          className="font-display text-5xl sm:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight"
+          className="font-display text-5xl sm:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight cursor-pointer"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
+          whileHover={{
+            y: -10,
+            scale: 1.05,
+            transition: {
+              type: "spring",
+              stiffness: 400,
+              damping: 10
+            }
+          }}
         >
           Helping Niche{' '}
           <span className="bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]">

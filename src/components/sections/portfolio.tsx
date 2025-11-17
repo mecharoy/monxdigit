@@ -47,11 +47,20 @@ export function Portfolio() {
           {industries.map((industry, index) => (
             <motion.div
               key={industry.title}
-              className="group bg-card border border-primary/10 rounded-2xl p-8 text-center hover:border-accent hover:shadow-xl hover:shadow-accent/20 hover:scale-105 transition-all"
+              className="group bg-card border border-primary/10 rounded-2xl p-8 text-center hover:border-accent hover:shadow-xl hover:shadow-accent/20 transition-all cursor-pointer"
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
+              whileHover={{
+                y: -15,
+                scale: 1.08,
+                transition: {
+                  type: "spring",
+                  stiffness: 500,
+                  damping: 12
+                }
+              }}
             >
               <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-full mb-6 group-hover:scale-110 transition-transform">
                 <industry.icon className="w-10 h-10 text-primary" />

@@ -65,11 +65,20 @@ export function Services() {
           {services.map((service, index) => (
             <motion.div
               key={service.title}
-              className="group relative bg-card border border-primary/10 rounded-2xl p-8 transition-all hover:border-primary hover:shadow-xl hover:shadow-primary/20 hover:-translate-y-2"
+              className="group relative bg-card border border-primary/10 rounded-2xl p-8 transition-all hover:border-primary hover:shadow-xl hover:shadow-primary/20 cursor-pointer"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
+              whileHover={{
+                y: -15,
+                scale: 1.05,
+                transition: {
+                  type: "spring",
+                  stiffness: 500,
+                  damping: 12
+                }
+              }}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
 
