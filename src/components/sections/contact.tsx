@@ -142,25 +142,25 @@ export function Contact() {
           transition={{ duration: 0.6, delay: 0.4 }}
           viewport={{ once: true }}
         >
-          <div className="text-center">
+          <a href="mailto:atulya@monxdigit.com" className="text-center block hover:scale-105 transition-transform">
             <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full mb-3">
               <Mail className="w-6 h-6 text-primary" />
             </div>
             <h4 className="font-display font-bold text-primary mb-1">Email</h4>
-            <a href="mailto:atulya@monxdigit.com" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+            <p className="text-sm text-muted-foreground hover:text-primary transition-colors">
               atulya@monxdigit.com
-            </a>
-          </div>
+            </p>
+          </a>
 
-          <div className="text-center">
+          <a href="https://wa.me/918877734118" target="_blank" rel="noopener noreferrer" className="text-center block hover:scale-105 transition-transform">
             <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full mb-3">
               <MessageSquare className="w-6 h-6 text-primary" />
             </div>
             <h4 className="font-display font-bold text-primary mb-1">Let's Chat</h4>
-            <a href="https://wa.me/918877734118" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+            <p className="text-sm text-muted-foreground hover:text-primary transition-colors">
               88777 34118
-            </a>
-          </div>
+            </p>
+          </a>
 
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full mb-3">
