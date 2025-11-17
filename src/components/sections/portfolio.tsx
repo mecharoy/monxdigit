@@ -30,7 +30,7 @@ export function Portfolio() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.3 }}
         >
           <div className="text-primary text-sm font-bold uppercase tracking-wider mb-4">
             Our Work
@@ -51,7 +51,7 @@ export function Portfolio() {
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, amount: 0.2 }}
               whileHover={{
                 y: -15,
                 scale: 1.08,

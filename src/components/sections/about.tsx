@@ -19,7 +19,7 @@ export function About() {
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.3 }}
           >
             <div className="text-primary text-sm font-bold uppercase tracking-wider mb-4">
               Why Choose monxdigit
@@ -48,7 +48,7 @@ export function About() {
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.3 }}
           >
             {features.map((feature, index) => (
               <motion.div
@@ -57,7 +57,7 @@ export function About() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, amount: 0.3 }}
               >
                 <feature.icon className="w-10 h-10 text-primary mb-3" />
                 <h4 className="font-display text-lg font-bold mb-2 text-primary">{feature.title}</h4>

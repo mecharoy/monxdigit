@@ -42,7 +42,7 @@ export function Contact() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.3 }}
         >
           <div className="text-primary text-sm font-bold uppercase tracking-wider mb-4">
             Let's Connect
@@ -60,7 +60,7 @@ export function Contact() {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.2 }}
         >
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
@@ -140,7 +140,7 @@ export function Contact() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.3 }}
         >
           <a href="mailto:atulya@monxdigit.com" className="text-center block hover:scale-105 transition-transform">
             <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full mb-3">
