@@ -78,7 +78,7 @@ export function Hero() {
         >
           <a
             href="#contact"
-            className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-accent to-accent/80 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-accent/30 transition-all hover:shadow-xl hover:shadow-accent/50 hover:-translate-y-1"
+            className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-primary to-secondary px-8 py-4 text-base font-semibold text-white shadow-lg shadow-primary/30 transition-all hover:shadow-xl hover:shadow-primary/50 hover:-translate-y-1"
           >
             Start Growing Today
           </a>

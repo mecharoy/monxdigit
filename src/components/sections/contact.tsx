@@ -35,7 +35,7 @@ export function Contact() {
   }
 
   return (
-    <section id="contact" className="py-20 sm:py-32 px-4 bg-gradient-to-br from-primary/5 via-background to-accent/5 border-t border-primary/10">
+    <section id="contact" className="py-20 sm:py-32 px-4 bg-gradient-to-br from-primary/5 via-background to-secondary/5 border-t border-primary/10">
       <div className="container mx-auto max-w-4xl">
         <motion.div
           className="text-center mb-12"
@@ -121,7 +121,7 @@ export function Contact() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-gradient-to-r from-accent to-accent/80 text-white font-semibold py-4 px-8 rounded-full shadow-lg shadow-accent/30 hover:shadow-xl hover:shadow-accent/50 hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex items-center justify-center gap-2"
+              className="w-full bg-gradient-to-r from-primary to-secondary text-white font-semibold py-4 px-8 rounded-full shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/50 hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex items-center justify-center gap-2"
             >
               {isSubmitting ? (
                 <>
