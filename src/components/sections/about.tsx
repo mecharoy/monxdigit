@@ -54,10 +54,11 @@ export function About() {
               <motion.div
                 key={feature.title}
                 className="bg-card border border-primary/10 rounded-xl p-6 hover:border-primary hover:-translate-y-1 transition-all"
+                style={{ opacity: 0 }}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.5, delay: index * 0.15 }}
+                viewport={{ once: true, amount: 0.3, margin: "0px 0px -100px 0px" }}
               >
                 <feature.icon className="w-10 h-10 text-primary mb-3" />
                 <h4 className="font-display text-lg font-bold mb-2 text-primary">{feature.title}</h4>

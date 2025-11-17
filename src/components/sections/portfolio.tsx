@@ -48,10 +48,11 @@ export function Portfolio() {
             <motion.div
               key={industry.title}
               className="group bg-card border border-primary/10 rounded-2xl p-8 text-center hover:border-primary hover:shadow-xl hover:shadow-primary/20 transition-all cursor-pointer"
+              style={{ opacity: 0 }}
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.5, delay: index * 0.15 }}
+              viewport={{ once: true, amount: 0.2, margin: "0px 0px -100px 0px" }}
               whileHover={{
                 y: -15,
                 scale: 1.08,
