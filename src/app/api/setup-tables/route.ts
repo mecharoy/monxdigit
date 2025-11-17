@@ -5,15 +5,27 @@ import { prisma } from '@/lib/prisma'
 // URL: https://your-app.vercel.app/api/setup-tables
 export async function GET() {
   try {
-    // Create tables using Prisma raw SQL
+    // Create LeadStatus enum type first
     await prisma.$executeRawUnsafe(`
-      CREATE TABLE IF NOT EXISTS "Lead" (
+      DO $$ BEGIN
+        CREATE TYPE "LeadStatus" AS ENUM ('NEW', 'CONTACTED', 'QUALIFIED', 'CONVERTED', 'ARCHIVED');
+      EXCEPTION
+        WHEN duplicate_object THEN null;
+      END $$;
+    `)
+
+    // Drop existing table if it has wrong schema
+    await prisma.$executeRawUnsafe(`DROP TABLE IF EXISTS "Lead";`)
+
+    // Create Lead table with proper enum type
+    await prisma.$executeRawUnsafe(`
+      CREATE TABLE "Lead" (
         "id" TEXT NOT NULL,
         "name" TEXT NOT NULL,
         "email" TEXT NOT NULL,
         "business" TEXT,
         "message" TEXT NOT NULL,
-        "status" TEXT NOT NULL DEFAULT 'NEW',
+        "status" "LeadStatus" NOT NULL DEFAULT 'NEW',
         "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
         "updatedAt" TIMESTAMP(3) NOT NULL,
         CONSTRAINT "Lead_pkey" PRIMARY KEY ("id")
@@ -32,8 +44,11 @@ export async function GET() {
       CREATE INDEX IF NOT EXISTS "Lead_status_idx" ON "Lead"("status");
     `)
 
+    // Drop and recreate Testimonial table
+    await prisma.$executeRawUnsafe(`DROP TABLE IF EXISTS "Testimonial";`)
+
     await prisma.$executeRawUnsafe(`
-      CREATE TABLE IF NOT EXISTS "Testimonial" (
+      CREATE TABLE "Testimonial" (
         "id" TEXT NOT NULL,
         "name" TEXT NOT NULL,
         "company" TEXT,
@@ -52,8 +67,11 @@ export async function GET() {
       CREATE INDEX IF NOT EXISTS "Testimonial_featured_idx" ON "Testimonial"("featured");
     `)
 
+    // Drop and recreate Service table
+    await prisma.$executeRawUnsafe(`DROP TABLE IF EXISTS "Service";`)
+
     await prisma.$executeRawUnsafe(`
-      CREATE TABLE IF NOT EXISTS "Service" (
+      CREATE TABLE "Service" (
         "id" TEXT NOT NULL,
         "title" TEXT NOT NULL,
         "description" TEXT NOT NULL,
