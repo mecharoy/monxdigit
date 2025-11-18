@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { useTheme } from './theme-provider'
 
 interface Particle {
   x: number
@@ -17,6 +18,7 @@ export function SpaceBackground() {
   const particlesRef = useRef<Particle[]>([])
   const mouseRef = useRef({ x: 0, y: 0 })
   const scrollRef = useRef(0)
+  const { theme } = useTheme()
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -70,7 +72,10 @@ export function SpaceBackground() {
     let animationFrameId: number
 
     const animate = () => {
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.05)'
+      // Clear canvas with theme-aware background
+      ctx.fillStyle = theme === 'dark'
+        ? 'rgba(12, 15, 25, 0.05)'
+        : 'rgba(255, 255, 255, 0.05)'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
       const scrollProgress = scrollRef.current / (document.body.scrollHeight - window.innerHeight)
@@ -111,12 +116,16 @@ export function SpaceBackground() {
           particle.size * 4
         )
 
-        // Navy blue color scheme - matching logo
+        // Navy blue color scheme - theme aware
         const hue = 210 // Fixed navy blue hue
         const saturation = 100
-        const lightness = 25 + scrollProgress * 15 // Slightly lighter on scroll
-        gradient.addColorStop(0, `hsla(${hue}, ${saturation}%, ${lightness + 10}%, ${particle.opacity * pulse * 0.4})`)
-        gradient.addColorStop(0.5, `hsla(${hue}, ${saturation}%, ${lightness}%, ${particle.opacity * pulse * 0.2})`)
+        const lightness = theme === 'dark'
+          ? 55 + scrollProgress * 15 // Brighter in dark mode
+          : 25 + scrollProgress * 15 // Original for light mode
+        const opacityMultiplier = theme === 'dark' ? 1.2 : 1 // More visible in dark mode
+
+        gradient.addColorStop(0, `hsla(${hue}, ${saturation}%, ${lightness + 10}%, ${particle.opacity * pulse * 0.4 * opacityMultiplier})`)
+        gradient.addColorStop(0.5, `hsla(${hue}, ${saturation}%, ${lightness}%, ${particle.opacity * pulse * 0.2 * opacityMultiplier})`)
         gradient.addColorStop(1, 'rgba(0, 0, 0, 0)')
 
         ctx.fillStyle = gradient
@@ -125,13 +134,13 @@ export function SpaceBackground() {
         ctx.fill()
 
         // Core particle
-        ctx.fillStyle = `hsla(${hue}, ${saturation}%, ${lightness + 5}%, ${particle.opacity * pulse * 0.5})`
+        ctx.fillStyle = `hsla(${hue}, ${saturation}%, ${lightness + 5}%, ${particle.opacity * pulse * 0.5 * opacityMultiplier})`
         ctx.beginPath()
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
         ctx.fill()
       })
 
-      // Connect nearby particles
+      // Connect nearby particles - theme aware
       particlesRef.current.forEach((particle, i) => {
         particlesRef.current.slice(i + 1).forEach((otherParticle) => {
           const dx = particle.x - otherParticle.x
@@ -139,9 +148,11 @@ export function SpaceBackground() {
           const distance = Math.sqrt(dx * dx + dy * dy)
 
           if (distance < 150) {
-            const opacity = (1 - distance / 150) * 0.15
+            const baseOpacity = (1 - distance / 150) * 0.15
+            const opacity = theme === 'dark' ? baseOpacity * 1.5 : baseOpacity
             const hue = 210 // Navy blue
-            ctx.strokeStyle = `hsla(${hue}, 100%, 30%, ${opacity})`
+            const lightness = theme === 'dark' ? 60 : 30
+            ctx.strokeStyle = `hsla(${hue}, 100%, ${lightness}%, ${opacity})`
             ctx.lineWidth = 0.5
             ctx.beginPath()
             ctx.moveTo(particle.x, particle.y)
@@ -162,13 +173,13 @@ export function SpaceBackground() {
       window.removeEventListener('scroll', handleScroll)
       cancelAnimationFrame(animationFrameId)
     }
-  }, [])
+  }, [theme])
 
   return (
     <canvas
       ref={canvasRef}
       className="fixed inset-0 -z-10 pointer-events-none"
-      style={{ opacity: 0.4 }}
+      style={{ opacity: theme === 'dark' ? 0.6 : 0.4 }}
     />
   )
 }

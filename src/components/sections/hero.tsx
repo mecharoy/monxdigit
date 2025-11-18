@@ -1,12 +1,32 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import { Rocket } from 'lucide-react'
 
 export function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center px-4 pt-20">
-      <div className="container mx-auto max-w-4xl text-center">
+    <section className="relative min-h-screen flex items-center justify-center px-4 pt-20 overflow-hidden">
+      {/* Decorative Image - Left Side */}
+      <motion.div
+        className="absolute left-0 top-1/2 -translate-y-1/2 w-80 h-96 hidden lg:block opacity-20 dark:opacity-10"
+        initial={{ opacity: 0, x: -100 }}
+        animate={{ opacity: 0.2, x: 0 }}
+        transition={{ duration: 1, delay: 0.5 }}
+      >
+        <div className="relative w-full h-full">
+          <Image
+            src="/images/handshaking-deal.jpg"
+            alt="Partnership"
+            fill
+            className="object-cover rounded-r-3xl shadow-2xl"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-background/20 to-background rounded-r-3xl" />
+        </div>
+      </motion.div>
+
+      <div className="container mx-auto max-w-4xl text-center relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

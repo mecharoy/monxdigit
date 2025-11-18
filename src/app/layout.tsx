@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Outfit, DM_Sans } from 'next/font/google'
 import './globals.css'
 import { Toaster } from '@/components/ui/toaster'
+import { ThemeProvider } from '@/components/theme-provider'
 
 const outfit = Outfit({
   subsets: ['latin'],
@@ -33,10 +34,12 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${outfit.variable} ${dmSans.variable}`}>
+    <html lang="en" className={`${outfit.variable} ${dmSans.variable}`} suppressHydrationWarning>
       <body className="font-body antialiased">
-        {children}
-        <Toaster />
+        <ThemeProvider>
+          {children}
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   )
