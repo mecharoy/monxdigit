@@ -45,8 +45,8 @@ export function SpaceBackground() {
           size: Math.random() * 2.5 + 0.5,
           speedX: (Math.random() - 0.5) * 0.3,
           speedY: (Math.random() - 0.5) * 0.3,
-          opacity: Math.random() * 0.5 + 0.3,
-          hue: Math.random() * 60 + 180, // Blue to purple range
+          opacity: Math.random() * 0.4 + 0.2,
+          hue: Math.random() * 20 + 200, // Navy blue range
         })
       }
       return particles
@@ -70,7 +70,7 @@ export function SpaceBackground() {
     let animationFrameId: number
 
     const animate = () => {
-      ctx.fillStyle = 'rgba(10, 14, 26, 0.1)'
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.05)'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
       const scrollProgress = scrollRef.current / (document.body.scrollHeight - window.innerHeight)
@@ -111,10 +111,12 @@ export function SpaceBackground() {
           particle.size * 4
         )
 
-        // Color changes with scroll
-        const hue = particle.hue + scrollProgress * 60
-        gradient.addColorStop(0, `hsla(${hue}, 80%, 70%, ${particle.opacity * pulse})`)
-        gradient.addColorStop(0.5, `hsla(${hue}, 80%, 60%, ${particle.opacity * pulse * 0.5})`)
+        // Navy blue color scheme - matching logo
+        const hue = 210 // Fixed navy blue hue
+        const saturation = 100
+        const lightness = 25 + scrollProgress * 15 // Slightly lighter on scroll
+        gradient.addColorStop(0, `hsla(${hue}, ${saturation}%, ${lightness + 10}%, ${particle.opacity * pulse * 0.4})`)
+        gradient.addColorStop(0.5, `hsla(${hue}, ${saturation}%, ${lightness}%, ${particle.opacity * pulse * 0.2})`)
         gradient.addColorStop(1, 'rgba(0, 0, 0, 0)')
 
         ctx.fillStyle = gradient
@@ -123,7 +125,7 @@ export function SpaceBackground() {
         ctx.fill()
 
         // Core particle
-        ctx.fillStyle = `hsla(${hue}, 90%, 85%, ${particle.opacity * pulse})`
+        ctx.fillStyle = `hsla(${hue}, ${saturation}%, ${lightness + 5}%, ${particle.opacity * pulse * 0.5})`
         ctx.beginPath()
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
         ctx.fill()
@@ -137,9 +139,9 @@ export function SpaceBackground() {
           const distance = Math.sqrt(dx * dx + dy * dy)
 
           if (distance < 150) {
-            const opacity = (1 - distance / 150) * 0.3
-            const hue = 200 + scrollProgress * 40
-            ctx.strokeStyle = `hsla(${hue}, 70%, 60%, ${opacity})`
+            const opacity = (1 - distance / 150) * 0.15
+            const hue = 210 // Navy blue
+            ctx.strokeStyle = `hsla(${hue}, 100%, 30%, ${opacity})`
             ctx.lineWidth = 0.5
             ctx.beginPath()
             ctx.moveTo(particle.x, particle.y)
@@ -166,7 +168,7 @@ export function SpaceBackground() {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 -z-10 pointer-events-none"
-      style={{ opacity: 0.6 }}
+      style={{ opacity: 0.4 }}
     />
   )
 }
