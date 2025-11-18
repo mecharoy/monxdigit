@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import { Target, Megaphone, UserCheck, Calendar } from 'lucide-react'
 
 const features = [
@@ -35,6 +36,28 @@ export function About() {
                 Whether you're helping clients rebuild their credit or securing their dream home, we bring you ready-to-convert prospects. Our targeted approach ensures you spend less time chasing leads and more time closing deals.
               </p>
             </div>
+
+            {/* Data-Driven Image */}
+            <motion.div
+              className="mt-8 relative h-64 rounded-2xl overflow-hidden shadow-xl"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true, amount: 0.3 }}
+            >
+              <Image
+                src="/images/data-driven.jpg"
+                alt="Data-Driven Results"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-card/90 via-card/40 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-6">
+                <h3 className="font-display text-2xl font-bold text-white mb-2">Data-Driven Results</h3>
+                <p className="text-white/90 text-sm">Every campaign is optimized for maximum ROI and qualified leads.</p>
+              </div>
+            </motion.div>
           </motion.div>
 
           <motion.div

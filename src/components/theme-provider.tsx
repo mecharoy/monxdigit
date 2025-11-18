@@ -28,18 +28,15 @@ export function ThemeProvider({
 
   React.useEffect(() => {
     setMounted(true)
-    // Get theme from localStorage on mount
+    // Get theme from localStorage on mount, default to light if not set
     const savedTheme = localStorage.getItem('theme') as Theme | null
     if (savedTheme) {
       setThemeState(savedTheme)
       document.documentElement.classList.toggle('dark', savedTheme === 'dark')
     } else {
-      // Check system preference
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light'
-      setThemeState(systemTheme)
-      document.documentElement.classList.toggle('dark', systemTheme === 'dark')
+      // Default to light mode
+      setThemeState('light')
+      document.documentElement.classList.remove('dark')
     }
   }, [])
 
