@@ -62,11 +62,7 @@ export function ThemeProvider({
     [theme, setTheme, toggleTheme]
   )
 
-  // Prevent flash of unstyled content
-  if (!mounted) {
-    return <>{children}</>
-  }
-
+  // Always provide context, even during SSR
   return (
     <ThemeProviderContext.Provider value={value}>
       {children}
@@ -76,8 +72,13 @@ export function ThemeProvider({
 
 export function useTheme() {
   const context = React.useContext(ThemeProviderContext)
+  // Return default values during SSR or if used outside provider
   if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider')
+    return {
+      theme: 'light' as Theme,
+      setTheme: () => {},
+      toggleTheme: () => {},
+    }
   }
   return context
 }
