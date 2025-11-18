@@ -1,6 +1,5 @@
 import { Navigation } from '@/components/navigation'
 import { Hero } from '@/components/sections/hero'
-import { Stats } from '@/components/sections/stats'
 import { Services } from '@/components/sections/services'
 import { About } from '@/components/sections/about'
 import { Portfolio } from '@/components/sections/portfolio'
@@ -17,7 +16,6 @@ export default function Home() {
       <SpaceBackground />
       <Navigation />
       <Hero />
-      <Stats />
       <Services />
       <About />
       <Portfolio />

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Mail, MessageSquare, Globe, Loader2 } from 'lucide-react'
+import { Mail, Globe, Loader2 } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import { submitContactForm } from '@/app/actions/contact'
 
@@ -136,7 +136,7 @@ export function Contact() {
         </motion.div>
 
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-2xl mx-auto"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
@@ -149,16 +149,6 @@ export function Contact() {
             <h4 className="font-display font-bold text-primary mb-1">Email</h4>
             <p className="text-sm text-muted-foreground hover:text-primary transition-colors">
               atulya@monxdigit.com
-            </p>
-          </a>
-
-          <a href="https://wa.me/918877734118" target="_blank" rel="noopener noreferrer" className="text-center block hover:scale-105 transition-transform">
-            <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full mb-3">
-              <MessageSquare className="w-6 h-6 text-primary" />
-            </div>
-            <h4 className="font-display font-bold text-primary mb-1">Let's Chat</h4>
-            <p className="text-sm text-muted-foreground hover:text-primary transition-colors">
-              88777 34118
             </p>
           </a>
 

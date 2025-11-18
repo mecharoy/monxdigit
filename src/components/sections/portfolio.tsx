@@ -1,23 +1,18 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { ShoppingBag, Briefcase, Home } from 'lucide-react'
+import { CreditCard, Home } from 'lucide-react'
 
 const industries = [
   {
-    icon: ShoppingBag,
-    title: 'E-Commerce',
-    description: 'Scaling online stores with ROAS-focused campaigns that drive sales and customer acquisition.',
-  },
-  {
-    icon: Briefcase,
-    title: 'B2B Services',
-    description: 'Generating qualified leads for professional services through strategic targeting.',
+    icon: CreditCard,
+    title: 'Credit Repair',
+    description: 'Connecting credit repair experts with clients who need to rebuild their financial future.',
   },
   {
     icon: Home,
-    title: 'Local Businesses',
-    description: 'Connecting neighborhood businesses with their local community through geo-targeted ads.',
+    title: 'Property Mortgage',
+    description: 'Helping mortgage professionals find qualified buyers ready to secure their dream home.',
   },
 ]
 
@@ -43,7 +38,7 @@ export function Portfolio() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto">
           {industries.map((industry, index) => (
             <motion.div
               key={industry.title}

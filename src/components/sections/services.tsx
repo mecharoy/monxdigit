@@ -57,7 +57,7 @@ export function Services() {
             Services & Solutions
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Tailored digital advertising strategies that connect your business with the right audience at the right time.
+            Comprehensive client conversion strategies that turn prospects into paying customers.
           </p>
         </motion.div>
 
