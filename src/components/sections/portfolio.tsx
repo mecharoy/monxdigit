@@ -10,12 +10,14 @@ const industries = [
     title: 'Credit Repair',
     description: 'Connecting credit repair experts with clients who need to rebuild their financial future.',
     image: '/images/credit-repair.png',
+    objectPosition: 'center',
   },
   {
     icon: Home,
     title: 'Property Mortgage',
     description: 'Helping mortgage professionals find qualified buyers ready to secure their dream home.',
     image: '/images/mortgage.jpg',
+    objectPosition: 'center 65%',
   },
 ]
 
@@ -68,6 +70,7 @@ export function Portfolio() {
                   fill
                   className="object-cover opacity-80 group-hover:opacity-100 transition-opacity"
                   sizes="(max-width: 768px) 100vw, 50vw"
+                  style={{ objectPosition: industry.objectPosition }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-card/80 to-transparent" />
               </div>
