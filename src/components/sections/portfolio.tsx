@@ -17,7 +17,7 @@ const industries = [
     title: 'Property Mortgage',
     description: 'Helping mortgage professionals find qualified buyers ready to secure their dream home.',
     image: '/images/mortgage.jpg',
-    objectPosition: 'center 65%',
+    objectPosition: 'center 35%',
   },
 ]
 
