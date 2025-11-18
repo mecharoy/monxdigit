@@ -40,7 +40,11 @@ export function SpaceBackground() {
       const particles: Particle[] = []
       const particleCount = Math.floor((canvas.width * canvas.height) / 15000)
 
+      // Colorful hues: blue, purple, cyan, pink
+      const hueRanges = [210, 270, 180, 330] // Blue, Purple, Cyan, Pink
+
       for (let i = 0; i < particleCount; i++) {
+        const baseHue = hueRanges[Math.floor(Math.random() * hueRanges.length)]
         particles.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
@@ -48,7 +52,7 @@ export function SpaceBackground() {
           speedX: (Math.random() - 0.5) * 0.3,
           speedY: (Math.random() - 0.5) * 0.3,
           opacity: Math.random() * 0.4 + 0.2,
-          hue: Math.random() * 20 + 200, // Navy blue range
+          hue: baseHue + Math.random() * 30 - 15, // Vary within range
         })
       }
       return particles
@@ -72,11 +76,8 @@ export function SpaceBackground() {
     let animationFrameId: number
 
     const animate = () => {
-      // Clear canvas with theme-aware background
-      ctx.fillStyle = theme === 'dark'
-        ? 'rgba(12, 15, 25, 0.05)'
-        : 'rgba(255, 255, 255, 0.05)'
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      // Clear canvas completely to prevent trails
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
 
       const scrollProgress = scrollRef.current / (document.body.scrollHeight - window.innerHeight)
 
@@ -116,16 +117,16 @@ export function SpaceBackground() {
           particle.size * 4
         )
 
-        // Navy blue color scheme - theme aware
-        const hue = 210 // Fixed navy blue hue
-        const saturation = 100
+        // Colorful particles - theme aware
+        const hue = particle.hue
+        const saturation = 80
         const lightness = theme === 'dark'
-          ? 55 + scrollProgress * 15 // Brighter in dark mode
-          : 25 + scrollProgress * 15 // Original for light mode
-        const opacityMultiplier = theme === 'dark' ? 1.2 : 1 // More visible in dark mode
+          ? 60 + scrollProgress * 10 // Brighter in dark mode
+          : 50 + scrollProgress * 10 // Vibrant in light mode
+        const opacityMultiplier = theme === 'dark' ? 1.3 : 0.8 // More visible in dark mode
 
-        gradient.addColorStop(0, `hsla(${hue}, ${saturation}%, ${lightness + 10}%, ${particle.opacity * pulse * 0.4 * opacityMultiplier})`)
-        gradient.addColorStop(0.5, `hsla(${hue}, ${saturation}%, ${lightness}%, ${particle.opacity * pulse * 0.2 * opacityMultiplier})`)
+        gradient.addColorStop(0, `hsla(${hue}, ${saturation}%, ${lightness + 10}%, ${particle.opacity * pulse * 0.5 * opacityMultiplier})`)
+        gradient.addColorStop(0.5, `hsla(${hue}, ${saturation}%, ${lightness}%, ${particle.opacity * pulse * 0.3 * opacityMultiplier})`)
         gradient.addColorStop(1, 'rgba(0, 0, 0, 0)')
 
         ctx.fillStyle = gradient
@@ -134,13 +135,13 @@ export function SpaceBackground() {
         ctx.fill()
 
         // Core particle
-        ctx.fillStyle = `hsla(${hue}, ${saturation}%, ${lightness + 5}%, ${particle.opacity * pulse * 0.5 * opacityMultiplier})`
+        ctx.fillStyle = `hsla(${hue}, ${saturation}%, ${lightness + 5}%, ${particle.opacity * pulse * 0.6 * opacityMultiplier})`
         ctx.beginPath()
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
         ctx.fill()
       })
 
-      // Connect nearby particles - theme aware
+      // Connect nearby particles - theme aware with colorful lines
       particlesRef.current.forEach((particle, i) => {
         particlesRef.current.slice(i + 1).forEach((otherParticle) => {
           const dx = particle.x - otherParticle.x
@@ -149,10 +150,11 @@ export function SpaceBackground() {
 
           if (distance < 150) {
             const baseOpacity = (1 - distance / 150) * 0.15
-            const opacity = theme === 'dark' ? baseOpacity * 1.5 : baseOpacity
-            const hue = 210 // Navy blue
-            const lightness = theme === 'dark' ? 60 : 30
-            ctx.strokeStyle = `hsla(${hue}, 100%, ${lightness}%, ${opacity})`
+            const opacity = theme === 'dark' ? baseOpacity * 1.5 : baseOpacity * 0.7
+            // Average hue between connected particles
+            const avgHue = (particle.hue + otherParticle.hue) / 2
+            const lightness = theme === 'dark' ? 60 : 55
+            ctx.strokeStyle = `hsla(${avgHue}, 80%, ${lightness}%, ${opacity})`
             ctx.lineWidth = 0.5
             ctx.beginPath()
             ctx.moveTo(particle.x, particle.y)
