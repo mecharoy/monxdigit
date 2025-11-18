@@ -29,10 +29,10 @@ export function About() {
             </h2>
             <div className="space-y-4 text-muted-foreground leading-relaxed">
               <p>
-                We know it's hard for service experts to consistently find the right clients. That's where we step in:
+                We know it's challenging for credit repair specialists and mortgage professionals to consistently find qualified clients. That's where we step in.
               </p>
               <p>
-                Let us build a seamless, end-to-end client acquisition system for you, so your calendar is always full and you can focus on growing your business.
+                Whether you're helping clients rebuild their credit or securing their dream home, we bring you ready-to-convert prospects. Our targeted approach ensures you spend less time chasing leads and more time closing deals.
               </p>
             </div>
           </motion.div>
