@@ -14,7 +14,7 @@ export function Hero() {
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/30 text-primary text-sm font-semibold mb-8 animate-float">
             <Rocket className="w-4 h-4" />
-            Performance-Driven Marketing
+            Helping Niche Find their audience
           </div>
         </motion.div>
 
