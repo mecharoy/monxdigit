@@ -109,14 +109,14 @@ export function Hero() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
-            <div className="relative w-full aspect-square max-w-lg mx-auto">
+            <div className="relative w-full aspect-square max-w-2xl mx-auto">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-3xl transform rotate-6"></div>
               <div className="relative rounded-3xl overflow-hidden shadow-2xl shadow-primary/20 border-4 border-card">
                 <Image
                   src="/images/handshaking-deal.jpg"
                   alt="Professional Partnership"
-                  width={600}
-                  height={600}
+                  width={800}
+                  height={800}
                   className="object-cover w-full h-full"
                   priority
                 />

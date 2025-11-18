@@ -36,7 +36,7 @@ export function SpaceBackground() {
     // Create particles
     const createParticles = () => {
       const particles: Particle[] = []
-      const particleCount = Math.floor((canvas.width * canvas.height) / 15000)
+      const particleCount = Math.floor((canvas.width * canvas.height) / 8000)
 
       for (let i = 0; i < particleCount; i++) {
         // Mix of teal (180), cyan (190), blue (210), and purple (270)
@@ -151,12 +151,12 @@ export function SpaceBackground() {
           const dy = particle.y - otherParticle.y
           const distance = Math.sqrt(dx * dx + dy * dy)
 
-          if (distance < 120) {
-            const opacity = (1 - distance / 120) * 0.2
+          if (distance < 160) {
+            const opacity = (1 - distance / 160) * 0.25
             // Average the hues of the two particles
             const avgHue = (particle.hue + otherParticle.hue) / 2
             ctx.strokeStyle = `hsla(${avgHue}, 60%, 50%, ${opacity})`
-            ctx.lineWidth = 0.8
+            ctx.lineWidth = 1
             ctx.beginPath()
             ctx.moveTo(particle.x, particle.y)
             ctx.lineTo(otherParticle.x, otherParticle.y)
