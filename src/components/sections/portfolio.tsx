@@ -45,7 +45,7 @@ export function Portfolio() {
           {industries.map((industry, index) => (
             <motion.div
               key={industry.title}
-              className="group bg-card border border-primary/10 rounded-2xl overflow-hidden text-center hover:border-primary hover:shadow-xl hover:shadow-primary/20 transition-all cursor-pointer"
+              className="group bg-card border border-primary/20 rounded-2xl overflow-hidden text-center shadow-md shadow-primary/5 hover:border-primary hover:shadow-xl hover:shadow-primary/20 transition-all cursor-pointer"
               style={{ opacity: 0 }}
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}

@@ -47,7 +47,7 @@ export function About() {
             {features.map((feature, index) => (
               <motion.div
                 key={feature.title}
-                className="bg-card border border-primary/10 rounded-xl p-6 hover:border-primary hover:-translate-y-1 transition-all"
+                className="bg-card border border-primary/20 rounded-xl p-6 shadow-md shadow-primary/5 hover:border-primary hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/10 transition-all"
                 style={{ opacity: 0 }}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
