@@ -11,6 +11,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
+          style={{ opacity: 0 }}
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/30 text-primary text-sm font-semibold mb-8 animate-float">
             <Rocket className="w-4 h-4" />
@@ -23,6 +24,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
+          style={{ opacity: 0 }}
         >
           {'Credit Repair & '.split(' ').map((word, wordIndex) => (
             <span key={`word-${wordIndex}`} className="inline-flex">
@@ -75,6 +77,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
+          style={{ opacity: 0 }}
         >
           Connecting credit repair specialists and mortgage professionals with qualified clients ready to rebuild their credit or buy their dream home. We handle lead generation, qualification, and appointment booking—you focus on closing deals.
         </motion.p>
@@ -84,6 +87,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
+          style={{ opacity: 0 }}
         >
           <a
             href="#contact"
