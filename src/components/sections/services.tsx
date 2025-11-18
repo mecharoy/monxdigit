@@ -48,7 +48,7 @@ export function Services() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.3 }}
         >
           <div className="text-primary text-sm font-bold uppercase tracking-wider mb-4">
             What We Offer
@@ -57,7 +57,7 @@ export function Services() {
             Services & Solutions
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Tailored digital advertising strategies that connect your business with the right audience at the right time.
+            Comprehensive client conversion strategies that turn prospects into paying customers.
           </p>
         </motion.div>
 
@@ -66,10 +66,11 @@ export function Services() {
             <motion.div
               key={service.title}
               className="group relative bg-card border border-primary/10 rounded-2xl p-8 transition-all hover:border-primary hover:shadow-xl hover:shadow-primary/20 cursor-pointer"
+              style={{ opacity: 0 }}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.15 }}
+              viewport={{ once: true, amount: 0.2, margin: "0px 0px -100px 0px" }}
               whileHover={{
                 y: -15,
                 scale: 1.05,

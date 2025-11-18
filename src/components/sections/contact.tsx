@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Mail, MessageSquare, Globe, Loader2 } from 'lucide-react'
+import { Mail, Globe, Loader2 } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import { submitContactForm } from '@/app/actions/contact'
 
@@ -42,7 +42,7 @@ export function Contact() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.3 }}
         >
           <div className="text-primary text-sm font-bold uppercase tracking-wider mb-4">
             Let's Connect
@@ -60,7 +60,7 @@ export function Contact() {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.2 }}
         >
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
@@ -136,31 +136,21 @@ export function Contact() {
         </motion.div>
 
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-2xl mx-auto"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.3 }}
         >
-          <div className="text-center">
+          <a href="mailto:atulya@monxdigit.com" className="text-center block hover:scale-105 transition-transform">
             <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full mb-3">
               <Mail className="w-6 h-6 text-primary" />
             </div>
             <h4 className="font-display font-bold text-primary mb-1">Email</h4>
-            <a href="mailto:hello@monxdigit.com" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-              hello@monxdigit.com
-            </a>
-          </div>
-
-          <div className="text-center">
-            <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full mb-3">
-              <MessageSquare className="w-6 h-6 text-primary" />
-            </div>
-            <h4 className="font-display font-bold text-primary mb-1">Let's Chat</h4>
-            <a href="#contact" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-              Schedule a Call
-            </a>
-          </div>
+            <p className="text-sm text-muted-foreground hover:text-primary transition-colors">
+              atulya@monxdigit.com
+            </p>
+          </a>
 
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full mb-3">

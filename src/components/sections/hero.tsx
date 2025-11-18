@@ -76,8 +76,7 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          Expert Meta & Google Ads management for small businesses and e-commerce brands.
-          Data-driven campaigns that generate real leads and measurable ROI.
+          Get more clients and close more deals—fast. We take care of finding and qualifying leads, booking appointments, and connecting you with serious buyers, so you can focus on sealing the final deal and growing your business.
         </motion.p>
 
         <motion.div

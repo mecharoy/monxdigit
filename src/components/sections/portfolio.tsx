@@ -1,23 +1,18 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { ShoppingBag, Briefcase, Home } from 'lucide-react'
+import { CreditCard, Home } from 'lucide-react'
 
 const industries = [
   {
-    icon: ShoppingBag,
-    title: 'E-Commerce',
-    description: 'Scaling online stores with ROAS-focused campaigns that drive sales and customer acquisition.',
-  },
-  {
-    icon: Briefcase,
-    title: 'B2B Services',
-    description: 'Generating qualified leads for professional services through strategic targeting.',
+    icon: CreditCard,
+    title: 'Credit Repair',
+    description: 'Connecting credit repair experts with clients who need to rebuild their financial future.',
   },
   {
     icon: Home,
-    title: 'Local Businesses',
-    description: 'Connecting neighborhood businesses with their local community through geo-targeted ads.',
+    title: 'Property Mortgage',
+    description: 'Helping mortgage professionals find qualified buyers ready to secure their dream home.',
   },
 ]
 
@@ -30,7 +25,7 @@ export function Portfolio() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.3 }}
         >
           <div className="text-primary text-sm font-bold uppercase tracking-wider mb-4">
             Our Work
@@ -43,15 +38,16 @@ export function Portfolio() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto">
           {industries.map((industry, index) => (
             <motion.div
               key={industry.title}
               className="group bg-card border border-primary/10 rounded-2xl p-8 text-center hover:border-primary hover:shadow-xl hover:shadow-primary/20 transition-all cursor-pointer"
+              style={{ opacity: 0 }}
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.15 }}
+              viewport={{ once: true, amount: 0.2, margin: "0px 0px -100px 0px" }}
               whileHover={{
                 y: -15,
                 scale: 1.08,
