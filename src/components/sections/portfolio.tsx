@@ -9,13 +9,13 @@ const industries = [
     icon: CreditCard,
     title: 'Credit Repair',
     description: 'Connecting credit repair experts with clients who need to rebuild their financial future.',
-    image: '/images/credit-repair.svg',
+    image: '/images/data-driven.jpg',
   },
   {
     icon: Home,
     title: 'Property Mortgage',
     description: 'Helping mortgage professionals find qualified buyers ready to secure their dream home.',
-    image: '/images/mortgage.svg',
+    image: '/images/handshaking-deal.jpg',
   },
 ]
 
