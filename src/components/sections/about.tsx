@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import { Target, Megaphone, UserCheck, Calendar } from 'lucide-react'
 
 const features = [
@@ -27,13 +28,22 @@ export function About() {
             <h2 className="font-display text-4xl sm:text-5xl font-extrabold mb-6">
               Your Partner in Client Acquisition
             </h2>
-            <div className="space-y-4 text-muted-foreground leading-relaxed">
+            <div className="space-y-4 text-muted-foreground leading-relaxed mb-8">
               <p>
                 We know it's challenging for credit repair specialists and mortgage professionals to consistently find qualified clients. That's where we step in.
               </p>
               <p>
                 Whether you're helping clients rebuild their credit or securing their dream home, we bring you ready-to-convert prospects. Our targeted approach ensures you spend less time chasing leads and more time closing deals.
               </p>
+            </div>
+            <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-lg shadow-primary/10 border-2 border-primary/20">
+              <Image
+                src="/images/data-driven.jpg"
+                alt="Data-Driven Approach"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
             </div>
           </motion.div>
 

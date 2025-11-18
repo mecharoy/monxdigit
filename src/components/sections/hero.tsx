@@ -1,12 +1,15 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import { Rocket } from 'lucide-react'
 
 export function Hero() {
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 pt-20">
-      <div className="container mx-auto max-w-4xl text-center">
+      <div className="container mx-auto max-w-7xl">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="text-center lg:text-left">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -71,7 +74,7 @@ export function Hero() {
         </motion.h1>
 
         <motion.p
-          className="text-lg sm:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed"
+          className="text-lg sm:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto lg:mx-0 leading-relaxed"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
@@ -80,7 +83,7 @@ export function Hero() {
         </motion.p>
 
         <motion.div
-          className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+          className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
@@ -98,6 +101,29 @@ export function Hero() {
             Explore Services
           </a>
         </motion.div>
+          </div>
+
+          <motion.div
+            className="relative hidden lg:block"
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
+            <div className="relative w-full aspect-square max-w-lg mx-auto">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-3xl transform rotate-6"></div>
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl shadow-primary/20 border-4 border-card">
+                <Image
+                  src="/images/handshaking-deal.jpg"
+                  alt="Professional Partnership"
+                  width={600}
+                  height={600}
+                  className="object-cover w-full h-full"
+                  priority
+                />
+              </div>
+            </div>
+          </motion.div>
+        </div>
       </div>
     </section>
   )
