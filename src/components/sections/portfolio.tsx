@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import { CreditCard, Home } from 'lucide-react'
 
 const industries = [
@@ -8,11 +9,13 @@ const industries = [
     icon: CreditCard,
     title: 'Credit Repair',
     description: 'Connecting credit repair experts with clients who need to rebuild their financial future.',
+    image: '/images/credit-repair.svg',
   },
   {
     icon: Home,
     title: 'Property Mortgage',
     description: 'Helping mortgage professionals find qualified buyers ready to secure their dream home.',
+    image: '/images/mortgage.svg',
   },
 ]
 
@@ -42,7 +45,7 @@ export function Portfolio() {
           {industries.map((industry, index) => (
             <motion.div
               key={industry.title}
-              className="group bg-card border border-primary/10 rounded-2xl p-8 text-center hover:border-primary hover:shadow-xl hover:shadow-primary/20 transition-all cursor-pointer"
+              className="group bg-card border border-primary/10 rounded-2xl overflow-hidden text-center hover:border-primary hover:shadow-xl hover:shadow-primary/20 transition-all cursor-pointer"
               style={{ opacity: 0 }}
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
@@ -58,11 +61,23 @@ export function Portfolio() {
                 }
               }}
             >
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-full mb-6 group-hover:scale-110 transition-transform">
-                <industry.icon className="w-10 h-10 text-primary" />
+              <div className="relative h-48 w-full bg-gradient-to-br from-primary/10 to-secondary/10">
+                <Image
+                  src={industry.image}
+                  alt={industry.title}
+                  fill
+                  className="object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-card/80 to-transparent" />
               </div>
-              <h3 className="font-display text-2xl font-bold mb-3">{industry.title}</h3>
-              <p className="text-muted-foreground leading-relaxed">{industry.description}</p>
+              <div className="p-8">
+                <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-full mb-6 group-hover:scale-110 transition-transform -mt-16 relative z-10 border-4 border-card">
+                  <industry.icon className="w-10 h-10 text-primary" />
+                </div>
+                <h3 className="font-display text-2xl font-bold mb-3">{industry.title}</h3>
+                <p className="text-muted-foreground leading-relaxed">{industry.description}</p>
+              </div>
             </motion.div>
           ))}
         </div>

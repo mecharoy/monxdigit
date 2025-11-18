@@ -14,7 +14,7 @@ export function Hero() {
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/30 text-primary text-sm font-semibold mb-8 animate-float">
             <Rocket className="w-4 h-4" />
-            Performance-Driven Marketing
+            Helping Niche Find their audience
           </div>
         </motion.div>
 
@@ -24,7 +24,7 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
         >
-          {'Helping Niche '.split(' ').map((word, wordIndex) => (
+          {'Credit Repair & '.split(' ').map((word, wordIndex) => (
             <span key={`word-${wordIndex}`} className="inline-flex">
               {word.split('').map((char, charIndex) => (
                 <motion.span
@@ -42,11 +42,11 @@ export function Hero() {
                   {char}
                 </motion.span>
               ))}
-              {wordIndex < 'Helping Niche '.split(' ').length - 1 && '\u00A0'}
+              {wordIndex < 'Credit Repair & '.split(' ').length - 1 && '\u00A0'}
             </span>
           ))}
           <span className="bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]">
-            {'Find Their Audience'.split(' ').map((word, wordIndex) => (
+            {'Mortgage Leads'.split(' ').map((word, wordIndex) => (
               <span key={`gradient-word-${wordIndex}`} className="inline-flex">
                 {word.split('').map((char, charIndex) => (
                   <motion.span
@@ -64,7 +64,7 @@ export function Hero() {
                     {char}
                   </motion.span>
                 ))}
-                {wordIndex < 'Find Their Audience'.split(' ').length - 1 && '\u00A0'}
+                {wordIndex < 'Mortgage Leads'.split(' ').length - 1 && '\u00A0'}
               </span>
             ))}
           </span>
@@ -76,7 +76,7 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          Get more clients and close more deals—fast. We take care of finding and qualifying leads, booking appointments, and connecting you with serious buyers, so you can focus on sealing the final deal and growing your business.
+          Connecting credit repair specialists and mortgage professionals with qualified clients ready to rebuild their credit or buy their dream home. We handle lead generation, qualification, and appointment booking—you focus on closing deals.
         </motion.p>
 
         <motion.div
