@@ -181,7 +181,7 @@ export function SpaceBackground() {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 -z-10 pointer-events-none"
-      style={{ opacity: theme === 'dark' ? 0.6 : 0.4 }}
+      style={{ opacity: theme === 'dark' ? 0.6 : 0.7 }}
     />
   )
 }
