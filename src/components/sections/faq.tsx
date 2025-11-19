@@ -7,11 +7,11 @@ import { useState } from 'react'
 const faqs = [
   {
     question: 'Who is this for?',
-    answer: 'Our services are specifically designed for credit repair specialists and mortgage professionals who want to scale their business with a consistent flow of qualified clients. If you\'re tired of inconsistent lead flow, spending hours on unqualified prospects, or struggling to fill your calendar with serious buyers, we\'re here to help. Whether you\'re a solo practitioner or a growing agency, our targeted approach ensures you connect with clients who are ready to take action—whether that\'s rebuilding their credit or securing their dream home.'
+    answer: 'Our services are specifically designed for credit repair specialists and mortgage professionals who want to scale their business with a consistent flow of qualified clients. If you\'re tired of inconsistent lead flow, spending hours on unqualified prospects, or struggling to fill your calendar with serious buyers, we\'re here to help. Whether you\'re a solo practitioner or a growing agency, our targeted approach ensures you connect with clients who are ready to take action—whether that\'s rebuilding their credit or securing their dream home. Don\'t worry, you would be in the right hands '
   },
   {
     question: 'What do we promise?',
-    answer: 'We promise qualified, ready-to-convert leads that match your ideal client profile. Our data-driven approach focuses on attracting individuals actively seeking credit repair or mortgage solutions, not just clicks or impressions. You\'ll receive pre-qualified prospects who have been vetted based on their financial situation and intent. We handle the heavy lifting—from ad creation and targeting to lead qualification and appointment booking—so you can focus on what you do best: closing deals. Our commitment is simple: measurable ROI, transparent reporting, and a partnership focused on your long-term success.'
+    answer: 'Monxdigit promises qualified, ready-to-convert leads that match your ideal client profile. Our data-driven approach focuses on attracting individuals who are actively seeking credit repair or mortgage solutions, rather than just clicks or impressions. You\'ll receive pre-qualified prospects who have been vetted based on their financial situation and intent. We handle the heavy lifting—from ad creation and targeting to lead qualification and appointment booking—so you can focus on what you do best: closing deals. Our commitment is simple: measurable ROI, transparent reporting, and a partnership focused on your long-term success.'
   },
   {
     question: 'What should you expect?',
