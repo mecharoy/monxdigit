@@ -3,6 +3,7 @@ import { Hero } from '@/components/sections/hero'
 import { Services } from '@/components/sections/services'
 import { About } from '@/components/sections/about'
 import { Portfolio } from '@/components/sections/portfolio'
+import { FAQ } from '@/components/sections/faq'
 import { Contact } from '@/components/sections/contact'
 import { Footer } from '@/components/footer'
 import { BackgroundGradient } from '@/components/background-gradient'
@@ -19,6 +20,7 @@ export default function Home() {
       <Services />
       <About />
       <Portfolio />
+      <FAQ />
       <Contact />
       <Footer />
       <ScrollToTop />

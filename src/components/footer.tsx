@@ -47,17 +47,17 @@ export function Footer() {
             <ul className="space-y-2">
               <li>
                 <a href="#services" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Meta Ads
-                </a>
-              </li>
-              <li>
-                <a href="#services" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Google Ads
-                </a>
-              </li>
-              <li>
-                <a href="#services" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   Lead Generation
+                </a>
+              </li>
+              <li>
+                <a href="#services" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  Lead Acquisition
+                </a>
+              </li>
+              <li>
+                <a href="#services" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  Appointment Settings
                 </a>
               </li>
             </ul>

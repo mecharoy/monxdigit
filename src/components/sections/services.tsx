@@ -65,7 +65,7 @@ export function Services() {
           {services.map((service, index) => (
             <motion.div
               key={service.title}
-              className="group relative bg-card border border-primary/10 rounded-2xl p-8 transition-all hover:border-primary hover:shadow-xl hover:shadow-primary/20 cursor-pointer"
+              className="group relative bg-card border-2 border-primary/20 rounded-2xl p-8 transition-all hover:border-primary hover:shadow-xl hover:shadow-primary/20 cursor-pointer shadow-lg dark:shadow-sm"
               style={{ opacity: 0 }}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
