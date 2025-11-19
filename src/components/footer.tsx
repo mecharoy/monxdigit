@@ -11,7 +11,7 @@ export function Footer() {
               <span className="text-foreground">digit</span>
             </h3>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              Expert digital advertising for businesses ready to grow. Meta Ads, Google Ads,
+              Expert digital advertising for businesses ready to grow. Ads, customer acquisition
               and lead generation strategies that deliver results.
             </p>
           </div>
