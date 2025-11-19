@@ -119,14 +119,14 @@ export function SpaceBackground() {
 
         // Colorful particles - theme aware
         const hue = particle.hue
-        const saturation = 80
+        const saturation = theme === 'dark' ? 80 : 90
         const lightness = theme === 'dark'
           ? 60 + scrollProgress * 10 // Brighter in dark mode
-          : 50 + scrollProgress * 10 // Vibrant in light mode
-        const opacityMultiplier = theme === 'dark' ? 1.3 : 0.8 // More visible in dark mode
+          : 35 + scrollProgress * 5 // Darker/more saturated in light mode for visibility
+        const opacityMultiplier = theme === 'dark' ? 1.3 : 1.2 // Strong visibility in both modes
 
-        gradient.addColorStop(0, `hsla(${hue}, ${saturation}%, ${lightness + 10}%, ${particle.opacity * pulse * 0.5 * opacityMultiplier})`)
-        gradient.addColorStop(0.5, `hsla(${hue}, ${saturation}%, ${lightness}%, ${particle.opacity * pulse * 0.3 * opacityMultiplier})`)
+        gradient.addColorStop(0, `hsla(${hue}, ${saturation}%, ${lightness + 10}%, ${particle.opacity * pulse * 0.7 * opacityMultiplier})`)
+        gradient.addColorStop(0.5, `hsla(${hue}, ${saturation}%, ${lightness}%, ${particle.opacity * pulse * 0.5 * opacityMultiplier})`)
         gradient.addColorStop(1, 'rgba(0, 0, 0, 0)')
 
         ctx.fillStyle = gradient
@@ -135,7 +135,7 @@ export function SpaceBackground() {
         ctx.fill()
 
         // Core particle
-        ctx.fillStyle = `hsla(${hue}, ${saturation}%, ${lightness + 5}%, ${particle.opacity * pulse * 0.6 * opacityMultiplier})`
+        ctx.fillStyle = `hsla(${hue}, ${saturation}%, ${lightness + 5}%, ${particle.opacity * pulse * 0.8 * opacityMultiplier})`
         ctx.beginPath()
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
         ctx.fill()
@@ -149,13 +149,14 @@ export function SpaceBackground() {
           const distance = Math.sqrt(dx * dx + dy * dy)
 
           if (distance < 150) {
-            const baseOpacity = (1 - distance / 150) * 0.15
-            const opacity = theme === 'dark' ? baseOpacity * 1.5 : baseOpacity * 0.7
+            const baseOpacity = (1 - distance / 150) * 0.2
+            const opacity = theme === 'dark' ? baseOpacity * 1.5 : baseOpacity * 1.3
             // Average hue between connected particles
             const avgHue = (particle.hue + otherParticle.hue) / 2
-            const lightness = theme === 'dark' ? 60 : 55
-            ctx.strokeStyle = `hsla(${avgHue}, 80%, ${lightness}%, ${opacity})`
-            ctx.lineWidth = 0.5
+            const lightness = theme === 'dark' ? 60 : 40
+            const saturation = theme === 'dark' ? 80 : 90
+            ctx.strokeStyle = `hsla(${avgHue}, ${saturation}%, ${lightness}%, ${opacity})`
+            ctx.lineWidth = theme === 'dark' ? 0.5 : 1
             ctx.beginPath()
             ctx.moveTo(particle.x, particle.y)
             ctx.lineTo(otherParticle.x, otherParticle.y)
@@ -181,7 +182,7 @@ export function SpaceBackground() {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 -z-10 pointer-events-none"
-      style={{ opacity: theme === 'dark' ? 0.6 : 0.7 }}
+      style={{ opacity: theme === 'dark' ? 0.6 : 1 }}
     />
   )
 }
