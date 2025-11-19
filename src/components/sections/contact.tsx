@@ -48,7 +48,27 @@ export function Contact() {
             Let's Connect
           </div>
           <h2 className="font-display text-4xl sm:text-5xl font-extrabold mb-4">
-            Ready to Grow Your Business?
+            {'Ready to Grow Your Business?'.split(' ').map((word, wordIndex) => (
+              <span key={`word-${wordIndex}`} className="inline-flex">
+                {word.split('').map((char, charIndex) => (
+                  <motion.span
+                    key={`char-${wordIndex}-${charIndex}`}
+                    className="inline-block"
+                    whileHover={{
+                      y: -15,
+                      transition: {
+                        type: "spring",
+                        stiffness: 500,
+                        damping: 10
+                      }
+                    }}
+                  >
+                    {char}
+                  </motion.span>
+                ))}
+                {wordIndex < 'Ready to Grow Your Business?'.split(' ').length - 1 && '\u00A0'}
+              </span>
+            ))}
           </h2>
           <p className="text-lg text-muted-foreground">
             Book a free consultation to discuss how we can help you reach your target audience and achieve your marketing goals.

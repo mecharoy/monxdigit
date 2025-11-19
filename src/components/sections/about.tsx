@@ -26,7 +26,27 @@ export function About() {
               Why Choose Us?
             </div>
             <h2 className="font-display text-4xl sm:text-5xl font-extrabold mb-6">
-              Your Partner in Client Acquisition
+              {'Your Partner in Client Acquisition'.split(' ').map((word, wordIndex) => (
+                <span key={`word-${wordIndex}`} className="inline-flex">
+                  {word.split('').map((char, charIndex) => (
+                    <motion.span
+                      key={`char-${wordIndex}-${charIndex}`}
+                      className="inline-block"
+                      whileHover={{
+                        y: -15,
+                        transition: {
+                          type: "spring",
+                          stiffness: 500,
+                          damping: 10
+                        }
+                      }}
+                    >
+                      {char}
+                    </motion.span>
+                  ))}
+                  {wordIndex < 'Your Partner in Client Acquisition'.split(' ').length - 1 && '\u00A0'}
+                </span>
+              ))}
             </h2>
             <div className="space-y-4 text-muted-foreground leading-relaxed mb-8">
               <p>

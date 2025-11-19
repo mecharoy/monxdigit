@@ -36,7 +36,27 @@ export function Portfolio() {
             Our Work
           </div>
           <h2 className="font-display text-4xl sm:text-5xl font-extrabold mb-4">
-            Industries We Serve
+            {'Industries We Serve'.split(' ').map((word, wordIndex) => (
+              <span key={`word-${wordIndex}`} className="inline-flex">
+                {word.split('').map((char, charIndex) => (
+                  <motion.span
+                    key={`char-${wordIndex}-${charIndex}`}
+                    className="inline-block"
+                    whileHover={{
+                      y: -15,
+                      transition: {
+                        type: "spring",
+                        stiffness: 500,
+                        damping: 10
+                      }
+                    }}
+                  >
+                    {char}
+                  </motion.span>
+                ))}
+                {wordIndex < 'Industries We Serve'.split(' ').length - 1 && '\u00A0'}
+              </span>
+            ))}
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Proven expertise across diverse sectors, delivering results that matter.

@@ -54,7 +54,27 @@ export function Services() {
             What We Offer
           </div>
           <h2 className="font-display text-4xl sm:text-5xl font-extrabold mb-4">
-            Services & Solutions
+            {'Services & Solutions'.split(' ').map((word, wordIndex) => (
+              <span key={`word-${wordIndex}`} className="inline-flex">
+                {word.split('').map((char, charIndex) => (
+                  <motion.span
+                    key={`char-${wordIndex}-${charIndex}`}
+                    className="inline-block"
+                    whileHover={{
+                      y: -15,
+                      transition: {
+                        type: "spring",
+                        stiffness: 500,
+                        damping: 10
+                      }
+                    }}
+                  >
+                    {char}
+                  </motion.span>
+                ))}
+                {wordIndex < 'Services & Solutions'.split(' ').length - 1 && '\u00A0'}
+              </span>
+            ))}
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Comprehensive client conversion strategies that turn prospects into paying customers.
