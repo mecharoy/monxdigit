@@ -114,7 +114,7 @@ export function Contact() {
                 required
                 rows={5}
                 className="w-full px-4 py-3 bg-background border border-primary/20 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all resize-none"
-                placeholder="I'm looking to increase leads for my e-commerce store..."
+                placeholder="I'm looking to increase leads for my..."
               />
             </div>
 
