@@ -56,7 +56,7 @@ export function Contact() {
         </motion.div>
 
         <motion.div
-          className="bg-card border border-primary/10 rounded-2xl p-8 sm:p-12 mb-12"
+          className="bg-card border-2 border-primary/20 rounded-2xl p-8 sm:p-12 mb-12 shadow-lg dark:shadow-sm"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
