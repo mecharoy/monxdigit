@@ -90,6 +90,8 @@ model Submission {
   title        String
   type         SubmissionType
   content      String              @db.Text
+  fileUrl      String?
+  fileName     String?
   status       SubmissionStatus    @default(PENDING)
   adminReply   String?             @db.Text
   threadClosed Boolean             @default(false)
@@ -99,10 +101,12 @@ model Submission {
   todoItems    TodoItem[]
   createdAt    DateTime            @default(now())
   updatedAt    DateTime            @updatedAt
+  expiresAt    DateTime?
 
   @@index([authorId])
   @@index([status])
   @@index([createdAt])
+  @@index([expiresAt])
 }
 
 model SubmissionMessage {
