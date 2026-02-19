@@ -14,9 +14,10 @@ interface TodoChecklistProps {
   submissionId: string
   isAdmin: boolean
   initialTodos: TodoItem[]
+  threadClosed: boolean
 }
 
-export function TodoChecklist({ submissionId, isAdmin, initialTodos }: TodoChecklistProps) {
+export function TodoChecklist({ submissionId, isAdmin, initialTodos, threadClosed }: TodoChecklistProps) {
   const [todos, setTodos] = useState<TodoItem[]>(initialTodos)
   const [newText, setNewText] = useState('')
   const [adding, setAdding] = useState(false)
@@ -24,7 +25,7 @@ export function TodoChecklist({ submissionId, isAdmin, initialTodos }: TodoCheck
   const [error, setError] = useState('')
 
   const toggleTodo = async (todo: TodoItem) => {
-    if (isAdmin) return // Admin cannot tick items
+    if (isAdmin || threadClosed) return
     setTogglingId(todo.id)
     try {
       const res = await fetch(`/api/submissions/${submissionId}/todos/${todo.id}`, {
@@ -88,13 +89,13 @@ export function TodoChecklist({ submissionId, isAdmin, initialTodos }: TodoCheck
             <li key={todo.id} className="flex items-center gap-2.5">
               <button
                 onClick={() => toggleTodo(todo)}
-                disabled={isAdmin || togglingId === todo.id}
+                disabled={isAdmin || threadClosed || togglingId === todo.id}
                 className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-colors ${
                   todo.completed
                     ? 'bg-primary border-primary text-white'
                     : 'border-primary/30 bg-background'
-                } ${isAdmin ? 'cursor-not-allowed opacity-70' : 'hover:border-primary cursor-pointer'}`}
-                title={isAdmin ? 'Only the user can tick items' : undefined}
+                } ${isAdmin || threadClosed ? 'cursor-not-allowed opacity-70' : 'hover:border-primary cursor-pointer'}`}
+                title={threadClosed ? 'Thread is closed' : isAdmin ? 'Only the user can tick items' : undefined}
               >
                 {togglingId === todo.id ? (
                   <Loader2 className="w-2.5 h-2.5 animate-spin" />
@@ -116,7 +117,7 @@ export function TodoChecklist({ submissionId, isAdmin, initialTodos }: TodoCheck
         </ul>
       )}
 
-      {isAdmin && (
+      {isAdmin && !threadClosed && (
         <div className="flex gap-2">
           <input
             type="text"

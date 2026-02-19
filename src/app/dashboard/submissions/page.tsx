@@ -135,6 +135,7 @@ export default async function SubmissionsPage() {
                       submissionId={sub.id}
                       isAdmin={false}
                       initialTodos={sub.todoItems}
+                      threadClosed={sub.threadClosed}
                     />
                   )}
 
