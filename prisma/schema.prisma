@@ -86,20 +86,47 @@ model Post {
 }
 
 model Submission {
-  id         String           @id @default(cuid())
-  title      String
-  type       SubmissionType
-  content    String           @db.Text
-  status     SubmissionStatus @default(PENDING)
-  adminReply String?          @db.Text
-  authorId   String
-  author     User             @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  createdAt  DateTime         @default(now())
-  updatedAt  DateTime         @updatedAt
+  id           String              @id @default(cuid())
+  title        String
+  type         SubmissionType
+  content      String              @db.Text
+  status       SubmissionStatus    @default(PENDING)
+  adminReply   String?             @db.Text
+  threadClosed Boolean             @default(false)
+  authorId     String
+  author       User                @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  messages     SubmissionMessage[]
+  todoItems    TodoItem[]
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
 
   @@index([authorId])
   @@index([status])
   @@index([createdAt])
+}
+
+model SubmissionMessage {
+  id           String     @id @default(cuid())
+  submissionId String
+  submission   Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  content      String     @db.Text
+  isAdmin      Boolean    @default(false)
+  createdAt    DateTime   @default(now())
+
+  @@index([submissionId])
+}
+
+model TodoItem {
+  id           String     @id @default(cuid())
+  submissionId String
+  submission   Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  text         String
+  completed    Boolean    @default(false)
+  order        Int        @default(0)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([submissionId])
 }
 
 enum LeadStatus {

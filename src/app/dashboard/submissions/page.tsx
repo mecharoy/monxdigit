@@ -3,7 +3,9 @@ import Link from 'next/link'
 import { getSessionUser } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { formatDate } from '@/lib/utils'
-import { Send, Plus, ArrowLeft, FileText, CheckSquare, Megaphone, MessageCircle, MessageSquare } from 'lucide-react'
+import { SubmissionThread } from '@/components/submission-thread'
+import { TodoChecklist } from '@/components/todo-checklist'
+import { Send, Plus, ArrowLeft, FileText, CheckSquare, Megaphone, MessageCircle } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
@@ -40,6 +42,10 @@ export default async function SubmissionsPage() {
   const submissions = await prisma.submission.findMany({
     where: { authorId: user.id },
     orderBy: { createdAt: 'desc' },
+    include: {
+      messages: { orderBy: { createdAt: 'asc' } },
+      todoItems: { orderBy: { order: 'asc' } },
+    },
   })
 
   return (
@@ -81,13 +87,14 @@ export default async function SubmissionsPage() {
             </Link>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {submissions.map((sub) => (
               <div
                 key={sub.id}
-                className="bg-card border border-primary/10 rounded-xl px-5 py-4 hover:border-primary/20 transition-colors"
+                className="bg-card border border-primary/10 rounded-xl overflow-hidden"
               >
-                <div className="flex items-start justify-between gap-3 mb-2">
+                {/* Card header */}
+                <div className="flex items-start justify-between gap-3 px-5 py-4 border-b border-primary/10">
                   <div className="flex items-center gap-2 min-w-0">
                     <span className="text-muted-foreground shrink-0">
                       {typeIcons[sub.type] ?? <FileText className="w-4 h-4" />}
@@ -105,17 +112,29 @@ export default async function SubmissionsPage() {
                     {statusLabels[sub.status] ?? sub.status}
                   </span>
                 </div>
-                <p className="text-sm text-muted-foreground line-clamp-2 mb-2 pl-6">{sub.content}</p>
-                <p className="text-xs text-muted-foreground pl-6">{formatDate(sub.createdAt)}</p>
-                {sub.adminReply && (
-                  <div className="mt-3 ml-6 flex gap-2.5 bg-primary/5 border border-primary/20 rounded-lg px-3 py-2.5">
-                    <MessageSquare className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-xs font-semibold text-primary mb-0.5">Reply from Admin</p>
-                      <p className="text-sm text-foreground whitespace-pre-wrap">{sub.adminReply}</p>
-                    </div>
-                  </div>
-                )}
+
+                {/* Card body */}
+                <div className="px-5 py-4">
+                  <p className="text-sm text-muted-foreground whitespace-pre-wrap mb-1">{sub.content}</p>
+                  <p className="text-xs text-muted-foreground">{formatDate(sub.createdAt)}</p>
+
+                  {/* Todo checklist (only for TODO_LIST type) */}
+                  {sub.type === 'TODO_LIST' && (
+                    <TodoChecklist
+                      submissionId={sub.id}
+                      isAdmin={false}
+                      initialTodos={sub.todoItems}
+                    />
+                  )}
+
+                  {/* Thread */}
+                  <SubmissionThread
+                    submissionId={sub.id}
+                    isAdmin={false}
+                    initialMessages={sub.messages}
+                    initialThreadClosed={sub.threadClosed}
+                  />
+                </div>
               </div>
             ))}
           </div>

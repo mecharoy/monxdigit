@@ -5,7 +5,8 @@ import { prisma } from '@/lib/prisma'
 import { formatDateTime } from '@/lib/utils'
 import { LogoutButton } from '@/components/admin/logout-button'
 import { UpdateSubmissionStatus } from '@/components/admin/update-submission-status'
-import { AdminReplyBox } from '@/components/admin/admin-reply-box'
+import { SubmissionThread } from '@/components/submission-thread'
+import { TodoChecklist } from '@/components/todo-checklist'
 import { ArrowLeft } from 'lucide-react'
 
 async function checkAuth() {
@@ -16,12 +17,6 @@ async function checkAuth() {
 
 export const dynamic = 'force-dynamic'
 
-const statusColors: Record<string, string> = {
-  PENDING: 'bg-yellow-500/10 text-yellow-600',
-  REVIEWED: 'bg-blue-500/10 text-blue-600',
-  ACKNOWLEDGED: 'bg-green-500/10 text-green-600',
-}
-
 const typeLabels: Record<string, string> = {
   DOCUMENT: 'Document',
   TODO_LIST: 'To-Do',
@@ -29,19 +24,75 @@ const typeLabels: Record<string, string> = {
   MESSAGE: 'Message',
 }
 
+type Submission = Awaited<ReturnType<typeof fetchSubmissions>>[number]
+
+async function fetchSubmissions() {
+  return prisma.submission.findMany({
+    orderBy: { createdAt: 'desc' },
+    include: {
+      author: { select: { name: true, email: true } },
+      messages: { orderBy: { createdAt: 'asc' } },
+      todoItems: { orderBy: { order: 'asc' } },
+    },
+  })
+}
+
+function SubmissionCard({ sub }: { sub: Submission }) {
+  return (
+    <div className="bg-card border border-primary/10 rounded-xl overflow-hidden">
+      <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-3 border-b border-primary/10 bg-muted/30">
+        <div className="flex items-center gap-3 min-w-0">
+          <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground bg-muted px-2 py-0.5 rounded">
+            {typeLabels[sub.type] ?? sub.type}
+          </span>
+          <span className="font-semibold truncate">{sub.title}</span>
+        </div>
+        <div className="flex items-center gap-3 shrink-0 flex-wrap">
+          <span className="text-xs text-muted-foreground">{sub.author.name} · {sub.author.email}</span>
+          <span className="text-xs text-muted-foreground">{formatDateTime(sub.createdAt)}</span>
+          <UpdateSubmissionStatus submissionId={sub.id} currentStatus={sub.status} />
+        </div>
+      </div>
+      <div className="px-5 py-4">
+        <pre className="whitespace-pre-wrap text-sm text-muted-foreground font-sans leading-relaxed max-h-48 overflow-y-auto">
+          {sub.content}
+        </pre>
+
+        {/* Todo checklist (only for TODO_LIST type) */}
+        {sub.type === 'TODO_LIST' && (
+          <TodoChecklist
+            submissionId={sub.id}
+            isAdmin={true}
+            initialTodos={sub.todoItems}
+          />
+        )}
+
+        {/* Thread */}
+        <SubmissionThread
+          submissionId={sub.id}
+          isAdmin={true}
+          initialMessages={sub.messages}
+          initialThreadClosed={sub.threadClosed}
+        />
+      </div>
+    </div>
+  )
+}
+
 export default async function AdminSubmissionsPage() {
   await checkAuth()
 
-  const submissions = await prisma.submission.findMany({
-    orderBy: { createdAt: 'desc' },
-    include: { author: { select: { name: true, email: true } } },
-  })
+  const submissions = await fetchSubmissions()
+
+  const pending = submissions.filter((s) => s.status === 'PENDING')
+  const reviewed = submissions.filter((s) => s.status === 'REVIEWED')
+  const acknowledged = submissions.filter((s) => s.status === 'ACKNOWLEDGED')
 
   const stats = {
     total: submissions.length,
-    pending: submissions.filter((s) => s.status === 'PENDING').length,
-    reviewed: submissions.filter((s) => s.status === 'REVIEWED').length,
-    acknowledged: submissions.filter((s) => s.status === 'ACKNOWLEDGED').length,
+    pending: pending.length,
+    reviewed: reviewed.length,
+    acknowledged: acknowledged.length,
   }
 
   return (
@@ -64,7 +115,7 @@ export default async function AdminSubmissionsPage() {
 
       <main className="container mx-auto px-4 py-8">
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
           <div className="bg-card border border-primary/10 rounded-lg p-4">
             <div className="text-2xl font-bold text-primary">{stats.total}</div>
             <div className="text-sm text-muted-foreground">Total</div>
@@ -83,43 +134,65 @@ export default async function AdminSubmissionsPage() {
           </div>
         </div>
 
-        {/* Submissions list */}
-        <div className="space-y-4">
-          {submissions.length === 0 && (
-            <div className="bg-card border border-primary/10 rounded-lg px-6 py-12 text-center text-muted-foreground">
-              No submissions yet.
+        {submissions.length === 0 && (
+          <div className="bg-card border border-primary/10 rounded-lg px-6 py-12 text-center text-muted-foreground">
+            No submissions yet.
+          </div>
+        )}
+
+        {/* Pending Section */}
+        {pending.length > 0 && (
+          <section className="mb-10">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
+              <h2 className="font-semibold text-lg">Pending</h2>
+              <span className="text-xs font-medium bg-yellow-500/10 text-yellow-600 px-2 py-0.5 rounded-full border border-yellow-500/20">
+                {pending.length}
+              </span>
             </div>
-          )}
-          {submissions.map((sub) => (
-            <div
-              key={sub.id}
-              className="bg-card border border-primary/10 rounded-xl overflow-hidden"
-            >
-              <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-3 border-b border-primary/10 bg-muted/30">
-                <div className="flex items-center gap-3 min-w-0">
-                  <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground bg-muted px-2 py-0.5 rounded">
-                    {typeLabels[sub.type] ?? sub.type}
-                  </span>
-                  <span className="font-semibold truncate">{sub.title}</span>
-                </div>
-                <div className="flex items-center gap-3 shrink-0">
-                  <span className="text-xs text-muted-foreground">{sub.author.name} · {sub.author.email}</span>
-                  <span className="text-xs text-muted-foreground">{formatDateTime(sub.createdAt)}</span>
-                  <span className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${statusColors[sub.status]}`}>
-                    {sub.status.charAt(0) + sub.status.slice(1).toLowerCase()}
-                  </span>
-                  <UpdateSubmissionStatus submissionId={sub.id} currentStatus={sub.status} />
-                </div>
-              </div>
-              <div className="px-5 py-4">
-                <pre className="whitespace-pre-wrap text-sm text-muted-foreground font-sans leading-relaxed max-h-64 overflow-y-auto">
-                  {sub.content}
-                </pre>
-                <AdminReplyBox submissionId={sub.id} initialReply={sub.adminReply} />
-              </div>
+            <div className="space-y-4">
+              {pending.map((sub) => (
+                <SubmissionCard key={sub.id} sub={sub} />
+              ))}
             </div>
-          ))}
-        </div>
+          </section>
+        )}
+
+        {/* Reviewed Section */}
+        {reviewed.length > 0 && (
+          <section className="mb-10">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-2.5 h-2.5 rounded-full bg-blue-500" />
+              <h2 className="font-semibold text-lg">Reviewed</h2>
+              <span className="text-xs font-medium bg-blue-500/10 text-blue-600 px-2 py-0.5 rounded-full border border-blue-500/20">
+                {reviewed.length}
+              </span>
+            </div>
+            <div className="space-y-4">
+              {reviewed.map((sub) => (
+                <SubmissionCard key={sub.id} sub={sub} />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Acknowledged Section */}
+        {acknowledged.length > 0 && (
+          <section className="mb-10">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
+              <h2 className="font-semibold text-lg">Acknowledged</h2>
+              <span className="text-xs font-medium bg-green-500/10 text-green-600 px-2 py-0.5 rounded-full border border-green-500/20">
+                {acknowledged.length}
+              </span>
+            </div>
+            <div className="space-y-4">
+              {acknowledged.map((sub) => (
+                <SubmissionCard key={sub.id} sub={sub} />
+              ))}
+            </div>
+          </section>
+        )}
       </main>
     </div>
   )

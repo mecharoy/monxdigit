@@ -29,14 +29,23 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   return NextResponse.json(updated)
 }
 
-// PATCH /api/admin/submissions/[id] — update submission status
+// PATCH /api/admin/submissions/[id] — update submission status OR thread state
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   if (!(await checkAdmin())) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   const body = await req.json()
-  const { status } = body
+  const { status, threadClosed } = body
+
+  // Toggle thread open/closed
+  if (typeof threadClosed === 'boolean') {
+    const updated = await prisma.submission.update({
+      where: { id: params.id },
+      data: { threadClosed },
+    })
+    return NextResponse.json(updated)
+  }
 
   const validStatuses = ['PENDING', 'REVIEWED', 'ACKNOWLEDGED']
   if (!validStatuses.includes(status)) {
