@@ -36,6 +36,29 @@ function getExt(name: string | null | undefined): string {
   return (name ?? '').split('.').pop()?.toLowerCase() ?? ''
 }
 
+const USER_COLORS = [
+  { bg: 'bg-violet-500/15', text: 'text-violet-600', border: 'border-violet-500/30' },
+  { bg: 'bg-sky-500/15',    text: 'text-sky-600',    border: 'border-sky-500/30' },
+  { bg: 'bg-emerald-500/15',text: 'text-emerald-600',border: 'border-emerald-500/30' },
+  { bg: 'bg-rose-500/15',   text: 'text-rose-600',   border: 'border-rose-500/30' },
+  { bg: 'bg-amber-500/15',  text: 'text-amber-600',  border: 'border-amber-500/30' },
+  { bg: 'bg-pink-500/15',   text: 'text-pink-600',   border: 'border-pink-500/30' },
+  { bg: 'bg-teal-500/15',   text: 'text-teal-600',   border: 'border-teal-500/30' },
+  { bg: 'bg-orange-500/15', text: 'text-orange-600', border: 'border-orange-500/30' },
+]
+
+function getUserColor(email: string) {
+  let hash = 0
+  for (let i = 0; i < email.length; i++) hash = (hash * 31 + email.charCodeAt(i)) >>> 0
+  return USER_COLORS[hash % USER_COLORS.length]
+}
+
+function getInitials(name: string): string {
+  const parts = name.trim().split(/\s+/)
+  if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+  return name.slice(0, 2).toUpperCase()
+}
+
 type Submission = Awaited<ReturnType<typeof fetchSubmissions>>[number]
 
 async function fetchSubmissions(status: 'PENDING' | 'REVIEWED' | 'ACKNOWLEDGED') {
@@ -91,8 +114,24 @@ function AttachmentViewer({ url, name }: { url: string; name: string | null }) {
 }
 
 function SubmissionCard({ sub }: { sub: Submission }) {
+  const color = getUserColor(sub.author.email)
+  const initials = getInitials(sub.author.name)
   return (
-    <div className="bg-card border border-primary/10 rounded-xl overflow-hidden">
+    <div className={`bg-card border rounded-xl overflow-hidden ${color.border}`}>
+      {/* Author banner */}
+      <div className={`flex items-center justify-between gap-3 px-5 py-2.5 ${color.bg}`}>
+        <div className="flex items-center gap-2.5 min-w-0">
+          <span className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 border ${color.bg} ${color.text} ${color.border}`}>
+            {initials}
+          </span>
+          <div className="min-w-0">
+            <p className={`text-sm font-bold leading-tight truncate ${color.text}`}>{sub.author.name}</p>
+            <p className="text-xs text-muted-foreground truncate">{sub.author.email}</p>
+          </div>
+        </div>
+        <span className="text-xs text-muted-foreground shrink-0">{formatDateTime(sub.createdAt)}</span>
+      </div>
+      {/* Submission header */}
       <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-3 border-b border-primary/10 bg-muted/30">
         <div className="flex items-center gap-3 min-w-0">
           <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground bg-muted px-2 py-0.5 rounded">
@@ -100,11 +139,7 @@ function SubmissionCard({ sub }: { sub: Submission }) {
           </span>
           <span className="font-semibold truncate">{sub.title}</span>
         </div>
-        <div className="flex items-center gap-3 shrink-0 flex-wrap">
-          <span className="text-xs text-muted-foreground">{sub.author.name} · {sub.author.email}</span>
-          <span className="text-xs text-muted-foreground">{formatDateTime(sub.createdAt)}</span>
-          <UpdateSubmissionStatus submissionId={sub.id} currentStatus={sub.status} />
-        </div>
+        <UpdateSubmissionStatus submissionId={sub.id} currentStatus={sub.status} />
       </div>
       <div className="px-5 py-4">
         {sub.type !== 'TODO_LIST' && sub.content?.trim() && (
