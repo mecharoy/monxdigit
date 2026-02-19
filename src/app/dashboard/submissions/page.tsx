@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma'
 import { formatDate } from '@/lib/utils'
 import { SubmissionThread } from '@/components/submission-thread'
 import { TodoChecklist } from '@/components/todo-checklist'
-import { Send, Plus, ArrowLeft, FileText, CheckSquare, Megaphone, MessageCircle } from 'lucide-react'
+import { Send, Plus, ArrowLeft, FileText, CheckSquare, Megaphone, MessageCircle, Download } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
@@ -115,9 +115,18 @@ export default async function SubmissionsPage() {
 
                 {/* Card body */}
                 <div className="px-5 py-4">
-                  {sub.type !== 'TODO_LIST' && (
+                  {sub.type === 'DOCUMENT' && sub.attachmentUrl ? (
+                    <a
+                      href={sub.attachmentUrl}
+                      download={sub.attachmentName ?? true}
+                      className="inline-flex items-center gap-2 text-sm font-medium text-primary border border-primary/20 bg-primary/5 hover:bg-primary/10 rounded-lg px-4 py-2 transition-colors mb-2"
+                    >
+                      <Download className="w-4 h-4" />
+                      {sub.attachmentName ?? 'Download file'}
+                    </a>
+                  ) : sub.type !== 'TODO_LIST' ? (
                     <p className="text-sm text-muted-foreground whitespace-pre-wrap mb-1">{sub.content}</p>
-                  )}
+                  ) : null}
                   <p className="text-xs text-muted-foreground">{formatDate(sub.createdAt)}</p>
 
                   {/* Todo checklist (only for TODO_LIST type) */}

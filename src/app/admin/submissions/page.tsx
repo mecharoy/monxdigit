@@ -7,7 +7,7 @@ import { LogoutButton } from '@/components/admin/logout-button'
 import { UpdateSubmissionStatus } from '@/components/admin/update-submission-status'
 import { SubmissionThread } from '@/components/submission-thread'
 import { TodoChecklist } from '@/components/todo-checklist'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Download } from 'lucide-react'
 
 async function checkAuth() {
   const cookieStore = await cookies()
@@ -54,11 +54,20 @@ function SubmissionCard({ sub }: { sub: Submission }) {
         </div>
       </div>
       <div className="px-5 py-4">
-        {sub.type !== 'TODO_LIST' && (
+        {sub.type === 'DOCUMENT' && sub.attachmentUrl ? (
+          <a
+            href={sub.attachmentUrl}
+            download={sub.attachmentName ?? true}
+            className="inline-flex items-center gap-2 text-sm font-medium text-primary border border-primary/20 bg-primary/5 hover:bg-primary/10 rounded-lg px-4 py-2 transition-colors mb-3"
+          >
+            <Download className="w-4 h-4" />
+            {sub.attachmentName ?? 'Download file'}
+          </a>
+        ) : sub.type !== 'TODO_LIST' ? (
           <pre className="whitespace-pre-wrap text-sm text-muted-foreground font-sans leading-relaxed max-h-48 overflow-y-auto">
             {sub.content}
           </pre>
-        )}
+        ) : null}
 
         {/* Todo checklist (only for TODO_LIST type) */}
         {sub.type === 'TODO_LIST' && (

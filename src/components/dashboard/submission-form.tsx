@@ -1,23 +1,34 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { FileText, CheckSquare, Megaphone, MessageCircle, Send, Loader2, Plus, X } from 'lucide-react'
+import { FileText, CheckSquare, Megaphone, MessageCircle, Send, Loader2, Plus, X, Upload, Paperclip } from 'lucide-react'
 
 const TYPES = [
-  { value: 'DOCUMENT', label: 'Document', icon: <FileText className="w-4 h-4" />, desc: 'Formal document or report' },
+  { value: 'DOCUMENT', label: 'Document', icon: <FileText className="w-4 h-4" />, desc: 'Upload a file or report' },
   { value: 'TODO_LIST', label: 'To-Do List', icon: <CheckSquare className="w-4 h-4" />, desc: 'Tasks and action items' },
   { value: 'UPDATE', label: 'Update', icon: <Megaphone className="w-4 h-4" />, desc: 'Progress or status update' },
   { value: 'MESSAGE', label: 'Message', icon: <MessageCircle className="w-4 h-4" />, desc: 'General message or note' },
 ]
 
+const ACCEPTED = '.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.zip'
+
 export function SubmissionForm() {
   const router = useRouter()
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
   const [type, setType] = useState('MESSAGE')
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [todoItems, setTodoItems] = useState<string[]>([])
   const [todoInput, setTodoInput] = useState('')
+
+  // File upload state
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [uploadedFileUrl, setUploadedFileUrl] = useState('')
+  const [uploadedFileName, setUploadedFileName] = useState('')
+  const [uploading, setUploading] = useState(false)
+
   const [sending, setSending] = useState(false)
   const [error, setError] = useState('')
 
@@ -39,6 +50,49 @@ export function SubmissionForm() {
     }
   }
 
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setSelectedFile(file)
+    setUploadedFileUrl('')
+    setUploadedFileName('')
+    setError('')
+    setUploading(true)
+
+    try {
+      const form = new FormData()
+      form.append('file', file)
+      const res = await fetch('/api/upload/document', { method: 'POST', body: form })
+      const data = await res.json()
+      if (!res.ok) {
+        setError(data.error || 'Upload failed')
+        setSelectedFile(null)
+        return
+      }
+      setUploadedFileUrl(data.url)
+      setUploadedFileName(data.fileName)
+    } catch {
+      setError('File upload failed. Please try again.')
+      setSelectedFile(null)
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const clearFile = () => {
+    setSelectedFile(null)
+    setUploadedFileUrl('')
+    setUploadedFileName('')
+    if (fileInputRef.current) fileInputRef.current.value = ''
+  }
+
+  const handleTypeChange = (newType: string) => {
+    setType(newType)
+    if (newType !== 'DOCUMENT') clearFile()
+    setError('')
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
@@ -46,16 +100,25 @@ export function SubmissionForm() {
 
     if (type === 'TODO_LIST') {
       if (todoItems.length === 0) { setError('Please add at least one to-do item.'); return }
+    } else if (type === 'DOCUMENT') {
+      if (!uploadedFileUrl) { setError('Please upload a file.'); return }
     } else {
       if (!content.trim()) { setError('Please write some content.'); return }
     }
 
+    if (uploading) { setError('Please wait for the file to finish uploading.'); return }
+
     setSending(true)
     try {
-      const body =
-        type === 'TODO_LIST'
-          ? { title, type, content: todoItems.join('\n'), items: todoItems }
-          : { title, type, content }
+      let body: Record<string, unknown>
+
+      if (type === 'TODO_LIST') {
+        body = { title, type, content: todoItems.join('\n'), items: todoItems }
+      } else if (type === 'DOCUMENT') {
+        body = { title, type, content: uploadedFileName, attachmentUrl: uploadedFileUrl, attachmentName: uploadedFileName }
+      } else {
+        body = { title, type, content }
+      }
 
       const res = await fetch('/api/submissions', {
         method: 'POST',
@@ -86,7 +149,7 @@ export function SubmissionForm() {
             <button
               key={t.value}
               type="button"
-              onClick={() => setType(t.value)}
+              onClick={() => handleTypeChange(t.value)}
               className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-center transition-all text-sm ${
                 type === t.value
                   ? 'border-primary bg-primary/10 text-primary'
@@ -116,12 +179,52 @@ export function SubmissionForm() {
         />
       </div>
 
-      {/* Content — text area for non-todo, item builder for todo */}
-      {type === 'TODO_LIST' ? (
+      {/* Content area */}
+      {type === 'DOCUMENT' ? (
+        <div>
+          <label className="block text-sm font-medium mb-1.5">File</label>
+
+          {!selectedFile ? (
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="w-full flex flex-col items-center gap-2 border-2 border-dashed border-primary/20 rounded-xl px-4 py-8 text-sm text-muted-foreground hover:border-primary/40 hover:text-foreground transition-colors"
+            >
+              <Upload className="w-6 h-6" />
+              <span>Click to choose a file</span>
+              <span className="text-xs opacity-60">PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, TXT, CSV, ZIP — max 20 MB</span>
+            </button>
+          ) : (
+            <div className="flex items-center gap-3 bg-card border border-primary/20 rounded-xl px-4 py-3">
+              <Paperclip className="w-4 h-4 text-muted-foreground shrink-0" />
+              <span className="text-sm flex-1 truncate">{selectedFile.name}</span>
+              {uploading && <Loader2 className="w-4 h-4 animate-spin text-primary shrink-0" />}
+              {!uploading && uploadedFileUrl && (
+                <span className="text-xs text-green-600 font-medium shrink-0">Uploaded</span>
+              )}
+              <button
+                type="button"
+                onClick={clearFile}
+                className="text-muted-foreground hover:text-red-500 transition-colors shrink-0"
+                disabled={uploading}
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept={ACCEPTED}
+            className="hidden"
+            onChange={handleFileChange}
+          />
+        </div>
+      ) : type === 'TODO_LIST' ? (
         <div>
           <label className="block text-sm font-medium mb-1.5">To-Do Items</label>
 
-          {/* Existing items */}
           {todoItems.length > 0 && (
             <ul className="space-y-1.5 mb-3">
               {todoItems.map((item, i) => (
@@ -140,7 +243,6 @@ export function SubmissionForm() {
             </ul>
           )}
 
-          {/* Add item input */}
           <div className="flex gap-2">
             <input
               type="text"
@@ -185,7 +287,7 @@ export function SubmissionForm() {
       <div className="flex justify-end">
         <button
           type="submit"
-          disabled={sending}
+          disabled={sending || uploading}
           className="flex items-center gap-2 bg-gradient-to-r from-primary to-secondary text-white text-sm font-semibold px-6 py-2.5 rounded-full hover:opacity-90 transition-opacity disabled:opacity-60"
         >
           {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}

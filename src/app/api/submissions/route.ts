@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSessionUser } from '@/lib/auth'
 
+const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000
+
 // GET /api/submissions — get logged-in user's own submissions
 export async function GET() {
   const user = await getSessionUser()
@@ -21,7 +23,7 @@ export async function POST(req: Request) {
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const body = await req.json()
-  const { title, type, content, items } = body
+  const { title, type, content, items, attachmentUrl, attachmentName } = body
 
   if (!title?.trim() || !type) {
     return NextResponse.json({ error: 'Title and type are required' }, { status: 400 })
@@ -31,6 +33,8 @@ export async function POST(req: Request) {
   if (!validTypes.includes(type)) {
     return NextResponse.json({ error: 'Invalid submission type' }, { status: 400 })
   }
+
+  const expiresAt = new Date(Date.now() + SEVEN_DAYS_MS)
 
   if (type === 'TODO_LIST') {
     const todoItems: string[] = Array.isArray(items) ? items.filter((s: unknown) => typeof s === 'string' && s.trim()) : []
@@ -44,11 +48,32 @@ export async function POST(req: Request) {
         type,
         content: todoItems.join('\n'),
         authorId: user.id,
+        expiresAt,
         todoItems: {
           create: todoItems.map((text, i) => ({ text: text.trim(), order: i })),
         },
       },
       include: { todoItems: true },
+    })
+
+    return NextResponse.json(submission, { status: 201 })
+  }
+
+  if (type === 'DOCUMENT') {
+    if (!attachmentUrl || !attachmentName) {
+      return NextResponse.json({ error: 'File upload is required for document submissions' }, { status: 400 })
+    }
+
+    const submission = await prisma.submission.create({
+      data: {
+        title: title.trim(),
+        type,
+        content: attachmentName,
+        attachmentUrl: attachmentUrl.trim(),
+        attachmentName: attachmentName.trim(),
+        authorId: user.id,
+        expiresAt,
+      },
     })
 
     return NextResponse.json(submission, { status: 201 })
@@ -64,6 +89,7 @@ export async function POST(req: Request) {
       type,
       content: content.trim(),
       authorId: user.id,
+      expiresAt,
     },
   })
 
