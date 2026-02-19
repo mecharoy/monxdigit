@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { Send, Loader2, Lock, LockOpen, MessageSquare } from 'lucide-react'
+import { Send, Loader2, Lock, Unlock, MessageSquare } from 'lucide-react'
 import { formatDateTime } from '@/lib/utils'
 
 interface Message {
@@ -104,7 +104,7 @@ export function SubmissionThread({
                 : 'bg-red-500/10 text-red-600 border-red-500/20 hover:bg-red-500/20'
             }`}
           >
-            {threadClosed ? <><LockOpen className="w-3 h-3" /> Reopen Thread</> : <><Lock className="w-3 h-3" /> End Thread</>}
+            {threadClosed ? <><Unlock className="w-3 h-3" /> Reopen Thread</> : <><Lock className="w-3 h-3" /> End Thread</>}
           </button>
         )}
       </div>
