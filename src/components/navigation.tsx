@@ -14,7 +14,12 @@ const navLinks = [
   { href: '#contact', label: 'Contact' },
 ]
 
-export function Navigation() {
+interface NavigationProps {
+  authSlot?: React.ReactNode
+  authMobileSlot?: React.ReactNode
+}
+
+export function Navigation({ authSlot, authMobileSlot }: NavigationProps) {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
@@ -68,12 +73,14 @@ export function Navigation() {
 
           <div className="hidden md:flex items-center gap-4">
             <ThemeToggle />
-            <a
-              href="#contact"
-              className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-primary to-secondary px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary/30 transition-all hover:shadow-xl hover:shadow-primary/50 hover:-translate-y-0.5"
-            >
-              Book a Call
-            </a>
+            {authSlot ?? (
+              <a
+                href="#contact"
+                className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-primary to-secondary px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary/30 transition-all hover:shadow-xl hover:shadow-primary/50 hover:-translate-y-0.5"
+              >
+                Book a Call
+              </a>
+            )}
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -105,13 +112,15 @@ export function Navigation() {
                 </li>
               ))}
               <li>
-                <a
-                  href="#contact"
-                  className="block w-full text-center rounded-full bg-gradient-to-r from-primary to-secondary px-6 py-2.5 text-sm font-semibold text-white"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Book a Call
-                </a>
+                {authMobileSlot ?? (
+                  <a
+                    href="#contact"
+                    className="block w-full text-center rounded-full bg-gradient-to-r from-primary to-secondary px-6 py-2.5 text-sm font-semibold text-white"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Book a Call
+                  </a>
+                )}
               </li>
             </ul>
           </div>
