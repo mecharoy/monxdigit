@@ -12,6 +12,9 @@ import {
   MessageSquare,
   Shield,
   ArrowRight,
+  PenSquare,
+  Send,
+  BookOpen,
 } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
@@ -91,6 +94,51 @@ export default async function DashboardPage() {
           <div className="absolute -right-4 -bottom-10 w-28 h-28 rounded-full bg-secondary/5 pointer-events-none" />
         </div>
 
+        {/* Feature cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+          <Link
+            href="/dashboard/posts"
+            className="group flex items-center gap-4 bg-card border border-primary/10 hover:border-primary/30 rounded-2xl p-5 transition-all hover:shadow-md"
+          >
+            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
+              <PenSquare className="w-5 h-5 text-primary" />
+            </div>
+            <div className="min-w-0">
+              <p className="font-semibold text-sm">My Posts</p>
+              <p className="text-xs text-muted-foreground">Write &amp; publish blog posts</p>
+            </div>
+            <ArrowRight className="w-4 h-4 text-muted-foreground ml-auto shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+          </Link>
+
+          <Link
+            href="/dashboard/submit"
+            className="group flex items-center gap-4 bg-card border border-primary/10 hover:border-primary/30 rounded-2xl p-5 transition-all hover:shadow-md"
+          >
+            <div className="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center shrink-0 group-hover:bg-secondary/20 transition-colors">
+              <Send className="w-5 h-5 text-secondary" />
+            </div>
+            <div className="min-w-0">
+              <p className="font-semibold text-sm">Send to Admin</p>
+              <p className="text-xs text-muted-foreground">Docs, to-dos, updates</p>
+            </div>
+            <ArrowRight className="w-4 h-4 text-muted-foreground ml-auto shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+          </Link>
+
+          <Link
+            href="/blog"
+            className="group flex items-center gap-4 bg-card border border-primary/10 hover:border-primary/30 rounded-2xl p-5 transition-all hover:shadow-md"
+          >
+            <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center shrink-0 group-hover:bg-purple-500/20 transition-colors">
+              <BookOpen className="w-5 h-5 text-purple-500" />
+            </div>
+            <div className="min-w-0">
+              <p className="font-semibold text-sm">Blog</p>
+              <p className="text-xs text-muted-foreground">View all published posts</p>
+            </div>
+            <ArrowRight className="w-4 h-4 text-muted-foreground ml-auto shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+          </Link>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left column */}
           <div className="lg:col-span-1 space-y-6">
@@ -132,8 +180,8 @@ export default async function DashboardPage() {
               </h3>
               <ul className="space-y-2">
                 {[
+                  { href: '/dashboard/submissions', label: 'My Submissions' },
                   { href: '/#services', label: 'Our Services' },
-                  { href: '/#portfolio', label: 'Portfolio' },
                   { href: '/#contact', label: 'Book a Call' },
                 ].map((link) => (
                   <li key={link.href}>
