@@ -1,10 +1,12 @@
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 import { cookies } from 'next/headers'
 import { prisma } from '@/lib/prisma'
 import { formatDateTime } from '@/lib/utils'
 import { LogoutButton } from '@/components/admin/logout-button'
 import { UpdateLeadStatus } from '@/components/admin/update-lead-status'
 import { DeleteLead } from '@/components/admin/delete-lead'
+import { Send } from 'lucide-react'
 
 async function checkAuth() {
   const cookieStore = await cookies()
@@ -47,6 +49,17 @@ export default async function AdminPage() {
       </header>
 
       <main className="container mx-auto px-4 py-8">
+        {/* Quick nav */}
+        <div className="flex gap-3 mb-8">
+          <Link
+            href="/admin/submissions"
+            className="flex items-center gap-2 bg-card border border-primary/10 hover:border-primary/30 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors"
+          >
+            <Send className="w-4 h-4 text-primary" />
+            View Member Submissions
+          </Link>
+        </div>
+
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
           <div className="bg-card border border-primary/10 rounded-lg p-4">

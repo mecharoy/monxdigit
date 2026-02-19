@@ -56,15 +56,49 @@ model Service {
 }
 
 model User {
+  id          String       @id @default(cuid())
+  name        String
+  email       String       @unique
+  password    String
+  role        UserRole     @default(USER)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  posts       Post[]
+  submissions Submission[]
+
+  @@index([email])
+}
+
+model Post {
   id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  password  String
-  role      UserRole @default(USER)
+  title     String
+  slug      String   @unique
+  content   String   @db.Text
+  published Boolean  @default(false)
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([email])
+  @@index([authorId])
+  @@index([published])
+  @@index([createdAt])
+}
+
+model Submission {
+  id        String           @id @default(cuid())
+  title     String
+  type      SubmissionType
+  content   String           @db.Text
+  status    SubmissionStatus @default(PENDING)
+  authorId  String
+  author    User             @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  @@index([authorId])
+  @@index([status])
+  @@index([createdAt])
 }
 
 enum LeadStatus {
@@ -78,4 +112,17 @@ enum LeadStatus {
 enum UserRole {
   USER
   ADMIN
+}
+
+enum SubmissionType {
+  DOCUMENT
+  TODO_LIST
+  UPDATE
+  MESSAGE
+}
+
+enum SubmissionStatus {
+  PENDING
+  REVIEWED
+  ACKNOWLEDGED
 }
