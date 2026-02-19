@@ -115,7 +115,7 @@ export function SubmissionForm() {
       if (type === 'TODO_LIST') {
         body = { title, type, content: todoItems.join('\n'), items: todoItems }
       } else if (type === 'DOCUMENT') {
-        body = { title, type, content: uploadedFileName, fileUrl: uploadedFileUrl, fileName: uploadedFileName }
+        body = { title, type, content: uploadedFileName, attachmentUrl: uploadedFileUrl, attachmentName: uploadedFileName }
       } else {
         body = { title, type, content }
       }

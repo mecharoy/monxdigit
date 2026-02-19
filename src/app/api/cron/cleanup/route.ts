@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
   // Find all expired submissions
   const expired = await prisma.submission.findMany({
     where: { expiresAt: { lte: now } },
-    select: { id: true, fileUrl: true },
+    select: { id: true, attachmentUrl: true },
   })
 
   if (expired.length === 0) {
@@ -26,9 +26,9 @@ export async function GET(req: NextRequest) {
 
   // Delete physical files for document uploads
   for (const sub of expired) {
-    if (sub.fileUrl) {
-      // fileUrl is like /uploads/documents/filename.pdf
-      const filePath = path.join(process.cwd(), 'public', sub.fileUrl)
+    if (sub.attachmentUrl) {
+      // attachmentUrl is like /uploads/documents/filename.pdf
+      const filePath = path.join(process.cwd(), 'public', sub.attachmentUrl)
       await unlink(filePath).catch(() => {
         // Ignore if file is already gone
       })

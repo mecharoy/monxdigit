@@ -90,8 +90,8 @@ model Submission {
   title        String
   type         SubmissionType
   content      String              @db.Text
-  fileUrl      String?
-  fileName     String?
+  attachmentUrl  String?
+  attachmentName String?
   status       SubmissionStatus    @default(PENDING)
   adminReply   String?             @db.Text
   threadClosed Boolean             @default(false)

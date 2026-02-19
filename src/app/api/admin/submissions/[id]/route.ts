@@ -38,11 +38,14 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   const body = await req.json()
   const { status, threadClosed } = body
 
-  // Toggle thread open/closed
+  // Only allow closing a thread — once closed it cannot be reopened
   if (typeof threadClosed === 'boolean') {
+    if (!threadClosed) {
+      return NextResponse.json({ error: 'Thread cannot be reopened once closed' }, { status: 403 })
+    }
     const updated = await prisma.submission.update({
       where: { id: params.id },
-      data: { threadClosed },
+      data: { threadClosed: true },
     })
     return NextResponse.json(updated)
   }
