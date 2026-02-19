@@ -1,0 +1,189 @@
+import { redirect, notFound } from 'next/navigation'
+import Link from 'next/link'
+import { cookies } from 'next/headers'
+import { prisma } from '@/lib/prisma'
+import { formatDateTime } from '@/lib/utils'
+import { LogoutButton } from '@/components/admin/logout-button'
+import { UpdateSubmissionStatus } from '@/components/admin/update-submission-status'
+import { SubmissionThread } from '@/components/submission-thread'
+import { TodoChecklist } from '@/components/todo-checklist'
+import { ArrowLeft, Paperclip } from 'lucide-react'
+
+async function checkAuth() {
+  const cookieStore = await cookies()
+  const auth = cookieStore.get('admin_auth')
+  if (!auth || auth.value !== 'authenticated') redirect('/admin/login')
+}
+
+export const dynamic = 'force-dynamic'
+
+const STATUS_MAP = {
+  pending: { db: 'PENDING' as const, label: 'Pending', dotColor: 'bg-yellow-500', badgeClass: 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20' },
+  reviewed: { db: 'REVIEWED' as const, label: 'Reviewed', dotColor: 'bg-blue-500', badgeClass: 'bg-blue-500/10 text-blue-600 border-blue-500/20' },
+  acknowledged: { db: 'ACKNOWLEDGED' as const, label: 'Acknowledged', dotColor: 'bg-green-500', badgeClass: 'bg-green-500/10 text-green-600 border-green-500/20' },
+}
+
+const typeLabels: Record<string, string> = {
+  DOCUMENT: 'Document',
+  TODO_LIST: 'To-Do',
+  UPDATE: 'Update',
+  MESSAGE: 'Message',
+}
+
+const IMAGE_EXTS = new Set(['png', 'jpg', 'jpeg', 'gif', 'webp'])
+
+function getExt(name: string | null | undefined): string {
+  return (name ?? '').split('.').pop()?.toLowerCase() ?? ''
+}
+
+type Submission = Awaited<ReturnType<typeof fetchSubmissions>>[number]
+
+async function fetchSubmissions(status: 'PENDING' | 'REVIEWED' | 'ACKNOWLEDGED') {
+  try {
+    return await prisma.submission.findMany({
+      where: { status },
+      orderBy: { createdAt: 'desc' },
+      include: {
+        author: { select: { name: true, email: true } },
+        messages: { orderBy: { createdAt: 'asc' } },
+        todoItems: { orderBy: { order: 'asc' } },
+      },
+    })
+  } catch {
+    return []
+  }
+}
+
+function AttachmentViewer({ url, name }: { url: string; name: string | null }) {
+  const ext = getExt(name ?? url)
+  const isImage = IMAGE_EXTS.has(ext)
+  const isPdf = ext === 'pdf'
+  const displayName = name ?? 'attachment'
+
+  return (
+    <div className="mt-3 space-y-2">
+      {isImage && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={url}
+          alt={displayName}
+          className="max-w-full max-h-80 rounded-xl border border-primary/10 object-contain bg-muted/30"
+        />
+      )}
+      {isPdf && (
+        <iframe
+          src={url}
+          title={displayName}
+          className="w-full h-96 rounded-xl border border-primary/10 bg-muted/30"
+        />
+      )}
+      <a
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-2 text-xs font-medium text-primary bg-primary/5 border border-primary/20 rounded-lg px-3 py-1.5 hover:bg-primary/10 transition-colors"
+      >
+        <Paperclip className="w-3.5 h-3.5" />
+        {isImage || isPdf ? `Open ${displayName}` : `Download ${displayName}`}
+      </a>
+    </div>
+  )
+}
+
+function SubmissionCard({ sub }: { sub: Submission }) {
+  return (
+    <div className="bg-card border border-primary/10 rounded-xl overflow-hidden">
+      <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-3 border-b border-primary/10 bg-muted/30">
+        <div className="flex items-center gap-3 min-w-0">
+          <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground bg-muted px-2 py-0.5 rounded">
+            {typeLabels[sub.type] ?? sub.type}
+          </span>
+          <span className="font-semibold truncate">{sub.title}</span>
+        </div>
+        <div className="flex items-center gap-3 shrink-0 flex-wrap">
+          <span className="text-xs text-muted-foreground">{sub.author.name} · {sub.author.email}</span>
+          <span className="text-xs text-muted-foreground">{formatDateTime(sub.createdAt)}</span>
+          <UpdateSubmissionStatus submissionId={sub.id} currentStatus={sub.status} />
+        </div>
+      </div>
+      <div className="px-5 py-4">
+        {sub.type !== 'TODO_LIST' && sub.content?.trim() && (
+          <pre className="whitespace-pre-wrap text-sm text-muted-foreground font-sans leading-relaxed max-h-48 overflow-y-auto">
+            {sub.content}
+          </pre>
+        )}
+
+        {sub.attachmentUrl && (
+          <AttachmentViewer url={sub.attachmentUrl} name={sub.attachmentName} />
+        )}
+
+        {sub.type === 'TODO_LIST' && (
+          <TodoChecklist
+            submissionId={sub.id}
+            isAdmin={true}
+            initialTodos={sub.todoItems}
+          />
+        )}
+
+        <SubmissionThread
+          submissionId={sub.id}
+          isAdmin={true}
+          initialMessages={sub.messages}
+          initialThreadClosed={sub.threadClosed}
+        />
+      </div>
+    </div>
+  )
+}
+
+export default async function AdminSubmissionsByStatusPage({
+  params,
+}: {
+  params: Promise<{ status: string }>
+}) {
+  await checkAuth()
+
+  const { status } = await params
+  const meta = STATUS_MAP[status as keyof typeof STATUS_MAP]
+  if (!meta) notFound()
+
+  const submissions = await fetchSubmissions(meta.db)
+
+  return (
+    <div className="min-h-screen bg-background">
+      <header className="border-b border-primary/10 bg-card/50 backdrop-blur-sm sticky top-0 z-10">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Link href="/admin/submissions" className="text-muted-foreground hover:text-foreground transition-colors">
+              <ArrowLeft className="w-4 h-4" />
+            </Link>
+            <h1 className="font-display text-2xl font-bold">
+              <span className="text-purple-500">monx</span>
+              <span className="text-foreground">digit</span>
+              <span className="text-muted-foreground text-lg ml-2">Submissions</span>
+            </h1>
+          </div>
+          <LogoutButton />
+        </div>
+      </header>
+
+      <main className="container mx-auto px-4 py-8">
+        <div className="flex items-center gap-2.5 mb-6">
+          <div className={`w-2.5 h-2.5 rounded-full ${meta.dotColor} shrink-0`} />
+          <h2 className="font-semibold text-lg">{meta.label}</h2>
+          <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${meta.badgeClass}`}>
+            {submissions.length}
+          </span>
+        </div>
+
+        {submissions.length === 0 ? (
+          <p className="text-sm text-muted-foreground">No {meta.label.toLowerCase()} submissions.</p>
+        ) : (
+          <div className="space-y-4">
+            {submissions.map((sub) => <SubmissionCard key={sub.id} sub={sub} />)}
+          </div>
+        )}
+      </main>
+    </div>
+  )
+}
