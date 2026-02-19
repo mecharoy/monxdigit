@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { getSessionUser } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { formatDate } from '@/lib/utils'
-import { Send, Plus, ArrowLeft, FileText, CheckSquare, Megaphone, MessageCircle } from 'lucide-react'
+import { Send, Plus, ArrowLeft, FileText, CheckSquare, Megaphone, MessageCircle, MessageSquare } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
@@ -107,6 +107,15 @@ export default async function SubmissionsPage() {
                 </div>
                 <p className="text-sm text-muted-foreground line-clamp-2 mb-2 pl-6">{sub.content}</p>
                 <p className="text-xs text-muted-foreground pl-6">{formatDate(sub.createdAt)}</p>
+                {sub.adminReply && (
+                  <div className="mt-3 ml-6 flex gap-2.5 bg-primary/5 border border-primary/20 rounded-lg px-3 py-2.5">
+                    <MessageSquare className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-xs font-semibold text-primary mb-0.5">Reply from Admin</p>
+                      <p className="text-sm text-foreground whitespace-pre-wrap">{sub.adminReply}</p>
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
           </div>

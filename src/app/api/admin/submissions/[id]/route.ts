@@ -8,6 +8,27 @@ async function checkAdmin() {
   return auth?.value === 'authenticated'
 }
 
+// PUT /api/admin/submissions/[id] — save admin reply
+export async function PUT(req: Request, { params }: { params: { id: string } }) {
+  if (!(await checkAdmin())) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  const body = await req.json()
+  const { adminReply } = body
+
+  if (typeof adminReply !== 'string') {
+    return NextResponse.json({ error: 'Invalid reply' }, { status: 400 })
+  }
+
+  const updated = await prisma.submission.update({
+    where: { id: params.id },
+    data: { adminReply: adminReply.trim() || null },
+  })
+
+  return NextResponse.json(updated)
+}
+
 // PATCH /api/admin/submissions/[id] — update submission status
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   if (!(await checkAdmin())) {

@@ -36,6 +36,7 @@ export function PostEditor({
   const [published, setPublished] = useState(initialPublished)
   const [mode, setMode] = useState<'write' | 'preview'>('write')
   const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
   const [error, setError] = useState('')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -92,24 +93,32 @@ export function PostEditor({
     },
   ]
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
     if (file.size > 3 * 1024 * 1024) {
       setError('Image must be under 3 MB')
+      e.target.value = ''
       return
     }
-    const reader = new FileReader()
-    reader.onload = () => {
-      const dataUrl = reader.result as string
+    const formData = new FormData()
+    formData.append('image', file)
+    try {
+      setUploading(true)
+      setError('')
+      const res = await fetch('/api/upload', { method: 'POST', body: formData })
+      const data = await res.json()
+      if (!res.ok) { setError(data.error || 'Upload failed'); return }
       const ta = textareaRef.current
-      if (!ta) return
-      const start = ta.selectionStart
-      const imgMd = `![${file.name}](${dataUrl})`
+      const start = ta?.selectionStart ?? content.length
+      const imgMd = `![${file.name}](${data.url})`
       setContent((prev) => prev.slice(0, start) + imgMd + prev.slice(start))
+    } catch {
+      setError('Image upload failed. Please try again.')
+    } finally {
+      setUploading(false)
+      e.target.value = ''
     }
-    reader.readAsDataURL(file)
-    e.target.value = ''
   }
 
   const handleSave = async () => {
@@ -168,10 +177,10 @@ export function PostEditor({
         {/* Image upload */}
         <label
           title="Upload image (max 3 MB)"
-          className="p-1.5 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+          className={`p-1.5 rounded-lg hover:bg-primary/10 text-muted-foreground hover:text-foreground transition-colors ${uploading ? 'pointer-events-none opacity-60' : 'cursor-pointer'}`}
         >
-          <ImageIcon className="w-4 h-4" />
-          <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+          {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImageIcon className="w-4 h-4" />}
+          <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} disabled={uploading} />
         </label>
 
         {/* Write / Preview toggle */}

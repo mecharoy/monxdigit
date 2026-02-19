@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma'
 import { formatDateTime } from '@/lib/utils'
 import { LogoutButton } from '@/components/admin/logout-button'
 import { UpdateSubmissionStatus } from '@/components/admin/update-submission-status'
+import { AdminReplyBox } from '@/components/admin/admin-reply-box'
 import { ArrowLeft } from 'lucide-react'
 
 async function checkAuth() {
@@ -114,6 +115,7 @@ export default async function AdminSubmissionsPage() {
                 <pre className="whitespace-pre-wrap text-sm text-muted-foreground font-sans leading-relaxed max-h-64 overflow-y-auto">
                   {sub.content}
                 </pre>
+                <AdminReplyBox submissionId={sub.id} initialReply={sub.adminReply} />
               </div>
             </div>
           ))}

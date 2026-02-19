@@ -86,15 +86,16 @@ model Post {
 }
 
 model Submission {
-  id        String           @id @default(cuid())
-  title     String
-  type      SubmissionType
-  content   String           @db.Text
-  status    SubmissionStatus @default(PENDING)
-  authorId  String
-  author    User             @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  createdAt DateTime         @default(now())
-  updatedAt DateTime         @updatedAt
+  id         String           @id @default(cuid())
+  title      String
+  type       SubmissionType
+  content    String           @db.Text
+  status     SubmissionStatus @default(PENDING)
+  adminReply String?          @db.Text
+  authorId   String
+  author     User             @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
 
   @@index([authorId])
   @@index([status])
