@@ -25,7 +25,7 @@ export function SubmissionForm() {
 
   // File upload state
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
-  const [uploadedFileUrl, setUploadedFileUrl] = useState('')
+  const [uploadedFileId, setUploadedFileId] = useState('')
   const [uploadedFileName, setUploadedFileName] = useState('')
   const [uploading, setUploading] = useState(false)
 
@@ -55,7 +55,7 @@ export function SubmissionForm() {
     if (!file) return
 
     setSelectedFile(file)
-    setUploadedFileUrl('')
+    setUploadedFileId('')
     setUploadedFileName('')
     setError('')
     setUploading(true)
@@ -70,7 +70,7 @@ export function SubmissionForm() {
         setSelectedFile(null)
         return
       }
-      setUploadedFileUrl(data.url)
+      setUploadedFileId(data.attachmentId)
       setUploadedFileName(data.fileName)
     } catch {
       setError('File upload failed. Please try again.')
@@ -82,7 +82,7 @@ export function SubmissionForm() {
 
   const clearFile = () => {
     setSelectedFile(null)
-    setUploadedFileUrl('')
+    setUploadedFileId('')
     setUploadedFileName('')
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
@@ -101,7 +101,7 @@ export function SubmissionForm() {
     if (type === 'TODO_LIST') {
       if (todoItems.length === 0) { setError('Please add at least one to-do item.'); return }
     } else if (type === 'DOCUMENT') {
-      if (!uploadedFileUrl) { setError('Please upload a file.'); return }
+      if (!uploadedFileId) { setError('Please upload a file.'); return }
     } else {
       if (!content.trim()) { setError('Please write some content.'); return }
     }
@@ -115,7 +115,7 @@ export function SubmissionForm() {
       if (type === 'TODO_LIST') {
         body = { title, type, content: todoItems.join('\n'), items: todoItems }
       } else if (type === 'DOCUMENT') {
-        body = { title, type, content: uploadedFileName, attachmentUrl: uploadedFileUrl, attachmentName: uploadedFileName }
+        body = { title, type, attachmentId: uploadedFileId, attachmentName: uploadedFileName }
       } else {
         body = { title, type, content }
       }
@@ -199,7 +199,7 @@ export function SubmissionForm() {
               <Paperclip className="w-4 h-4 text-muted-foreground shrink-0" />
               <span className="text-sm flex-1 truncate">{selectedFile.name}</span>
               {uploading && <Loader2 className="w-4 h-4 animate-spin text-primary shrink-0" />}
-              {!uploading && uploadedFileUrl && (
+              {!uploading && uploadedFileId && (
                 <span className="text-xs text-green-600 font-medium shrink-0">Uploaded</span>
               )}
               <button

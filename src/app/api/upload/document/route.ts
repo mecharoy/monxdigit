@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { put } from '@vercel/blob'
 import { getSessionUser } from '@/lib/auth'
+import { prisma } from '@/lib/prisma'
 
 const MAX_SIZE = 20 * 1024 * 1024 // 20 MB
 
@@ -15,6 +15,10 @@ const ALLOWED_TYPES: Record<string, string> = {
   'text/plain': 'txt',
   'text/csv': 'csv',
   'application/zip': 'zip',
+  'image/png': 'png',
+  'image/jpeg': 'jpg',
+  'image/gif': 'gif',
+  'image/webp': 'webp',
 }
 
 export async function POST(req: NextRequest) {
@@ -31,16 +35,31 @@ export async function POST(req: NextRequest) {
 
   if (!ALLOWED_TYPES[file.type]) {
     return NextResponse.json(
-      { error: 'Invalid file type. Allowed: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, TXT, CSV, ZIP' },
+      { error: 'Invalid file type.' },
       { status: 400 },
     )
   }
 
-  const ext = ALLOWED_TYPES[file.type]
+  const bytes = await file.arrayBuffer()
+  const buffer = Buffer.from(bytes)
   const originalName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_')
-  const storedName = `documents/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
 
-  const blob = await put(storedName, file, { access: 'public' })
+  // Store in DB temporarily under a placeholder submissionId key.
+  // The real submissionId is set when the submission is created.
+  // We use a temp record keyed by a generated id and swap later.
+  const tempId = `temp_${Date.now()}_${Math.random().toString(36).slice(2)}`
 
-  return NextResponse.json({ url: blob.url, fileName: originalName })
+  // Store as a pending attachment with tempId as a marker in fileName
+  const record = await prisma.fileAttachment.create({
+    data: {
+      // submissionId is required — we'll use the tempId as a placeholder
+      // and update it when the submission is created
+      submissionId: tempId,
+      fileName: originalName,
+      mimeType: file.type,
+      data: buffer,
+    },
+  })
+
+  return NextResponse.json({ attachmentId: record.id, fileName: originalName })
 }

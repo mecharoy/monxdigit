@@ -30,11 +30,6 @@ const typeLabels: Record<string, string> = {
   MESSAGE: 'Message',
 }
 
-const IMAGE_EXTS = new Set(['png', 'jpg', 'jpeg', 'gif', 'webp'])
-
-function getExt(name: string | null | undefined): string {
-  return (name ?? '').split('.').pop()?.toLowerCase() ?? ''
-}
 
 const USER_COLORS = [
   { bg: 'bg-violet-500/15', text: 'text-violet-600', border: 'border-violet-500/30' },
@@ -70,6 +65,7 @@ async function fetchSubmissions(status: 'PENDING' | 'REVIEWED' | 'ACKNOWLEDGED')
         author: { select: { name: true, email: true } },
         messages: { orderBy: { createdAt: 'asc' } },
         todoItems: { orderBy: { order: 'asc' } },
+        fileAttachment: { select: { id: true, fileName: true } },
       },
     })
   } catch {
@@ -77,37 +73,15 @@ async function fetchSubmissions(status: 'PENDING' | 'REVIEWED' | 'ACKNOWLEDGED')
   }
 }
 
-function AttachmentViewer({ url, name }: { url: string; name: string | null }) {
-  const ext = getExt(name ?? url)
-  const isImage = IMAGE_EXTS.has(ext)
-  const isPdf = ext === 'pdf'
-  const displayName = name ?? 'attachment'
-
+function AttachmentDownload({ submissionId, fileName }: { submissionId: string; fileName: string }) {
   return (
-    <div className="mt-3 space-y-2">
-      {isImage && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={url}
-          alt={displayName}
-          className="max-w-full max-h-80 rounded-xl border border-primary/10 object-contain bg-muted/30"
-        />
-      )}
-      {isPdf && (
-        <iframe
-          src={url}
-          title={displayName}
-          className="w-full h-96 rounded-xl border border-primary/10 bg-muted/30"
-        />
-      )}
+    <div className="mt-3">
       <a
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
+        href={`/api/admin/submissions/${submissionId}/download`}
         className="inline-flex items-center gap-2 text-xs font-medium text-primary bg-primary/5 border border-primary/20 rounded-lg px-3 py-1.5 hover:bg-primary/10 transition-colors"
       >
         <Paperclip className="w-3.5 h-3.5" />
-        {isImage || isPdf ? `Open ${displayName}` : `Download ${displayName}`}
+        Download {fileName}
       </a>
     </div>
   )
@@ -148,8 +122,8 @@ function SubmissionCard({ sub }: { sub: Submission }) {
           </pre>
         )}
 
-        {sub.attachmentUrl && (
-          <AttachmentViewer url={sub.attachmentUrl} name={sub.attachmentName} />
+        {sub.type === 'DOCUMENT' && sub.fileAttachment && (
+          <AttachmentDownload submissionId={sub.id} fileName={sub.fileAttachment.fileName} />
         )}
 
         {sub.type === 'TODO_LIST' && (

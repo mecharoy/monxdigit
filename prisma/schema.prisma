@@ -97,8 +97,9 @@ model Submission {
   threadClosed Boolean             @default(false)
   authorId     String
   author       User                @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  messages     SubmissionMessage[]
-  todoItems    TodoItem[]
+  messages       SubmissionMessage[]
+  todoItems      TodoItem[]
+  fileAttachment FileAttachment?
   createdAt    DateTime            @default(now())
   updatedAt    DateTime            @updatedAt
   expiresAt    DateTime?
@@ -107,6 +108,16 @@ model Submission {
   @@index([status])
   @@index([createdAt])
   @@index([expiresAt])
+}
+
+model FileAttachment {
+  id           String     @id @default(cuid())
+  submissionId String     @unique
+  submission   Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  fileName     String
+  mimeType     String
+  data         Bytes
+  createdAt    DateTime   @default(now())
 }
 
 model SubmissionMessage {

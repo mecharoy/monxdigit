@@ -23,7 +23,7 @@ export async function POST(req: Request) {
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const body = await req.json()
-  const { title, type, content, items, attachmentUrl, attachmentName } = body
+  const { title, type, content, items, attachmentId, attachmentName } = body
 
   if (!title?.trim() || !type) {
     return NextResponse.json({ error: 'Title and type are required' }, { status: 400 })
@@ -60,7 +60,7 @@ export async function POST(req: Request) {
   }
 
   if (type === 'DOCUMENT') {
-    if (!attachmentUrl || !attachmentName) {
+    if (!attachmentId || !attachmentName) {
       return NextResponse.json({ error: 'File upload is required for document submissions' }, { status: 400 })
     }
 
@@ -68,12 +68,17 @@ export async function POST(req: Request) {
       data: {
         title: title.trim(),
         type,
-        content: attachmentName,
-        attachmentUrl: attachmentUrl.trim(),
+        content: attachmentName.trim(),
         attachmentName: attachmentName.trim(),
         authorId: user.id,
         expiresAt,
       },
+    })
+
+    // Link the previously uploaded file to this submission
+    await prisma.fileAttachment.update({
+      where: { id: attachmentId },
+      data: { submissionId: submission.id },
     })
 
     return NextResponse.json(submission, { status: 201 })
