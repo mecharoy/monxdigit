@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { FileText, CheckSquare, Megaphone, MessageCircle, Send, Loader2 } from 'lucide-react'
+import { FileText, CheckSquare, Megaphone, MessageCircle, Send, Loader2, Plus, X } from 'lucide-react'
 
 const TYPES = [
   { value: 'DOCUMENT', label: 'Document', icon: <FileText className="w-4 h-4" />, desc: 'Formal document or report' },
@@ -16,21 +16,51 @@ export function SubmissionForm() {
   const [type, setType] = useState('MESSAGE')
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
+  const [todoItems, setTodoItems] = useState<string[]>([])
+  const [todoInput, setTodoInput] = useState('')
   const [sending, setSending] = useState(false)
   const [error, setError] = useState('')
+
+  const addTodoItem = () => {
+    const text = todoInput.trim()
+    if (!text) return
+    setTodoItems((prev) => [...prev, text])
+    setTodoInput('')
+  }
+
+  const removeTodoItem = (index: number) => {
+    setTodoItems((prev) => prev.filter((_, i) => i !== index))
+  }
+
+  const handleTodoKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      addTodoItem()
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
     if (!title.trim()) { setError('Please add a title.'); return }
-    if (!content.trim()) { setError('Please write some content.'); return }
+
+    if (type === 'TODO_LIST') {
+      if (todoItems.length === 0) { setError('Please add at least one to-do item.'); return }
+    } else {
+      if (!content.trim()) { setError('Please write some content.'); return }
+    }
 
     setSending(true)
     try {
+      const body =
+        type === 'TODO_LIST'
+          ? { title, type, content: todoItems.join('\n'), items: todoItems }
+          : { title, type, content }
+
       const res = await fetch('/api/submissions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, type, content }),
+        body: JSON.stringify(body),
       })
       if (!res.ok) {
         const data = await res.json()
@@ -86,27 +116,69 @@ export function SubmissionForm() {
         />
       </div>
 
-      {/* Content */}
-      <div>
-        <label className="block text-sm font-medium mb-1.5" htmlFor="sub-content">
-          Content
-        </label>
-        <textarea
-          id="sub-content"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          placeholder={
-            type === 'TODO_LIST'
-              ? '- [ ] Task one\n- [ ] Task two\n- [ ] Task three'
-              : 'Write your content here…'
-          }
-          rows={12}
-          className="w-full bg-card border border-primary/20 rounded-xl px-4 py-3 text-sm resize-y focus:outline-none focus:ring-2 focus:ring-primary/30 leading-relaxed font-mono"
-        />
-        <p className="text-xs text-muted-foreground mt-1">
-          Markdown supported. For To-Do lists, use <code className="bg-muted px-1 rounded">- [ ] task</code> syntax.
-        </p>
-      </div>
+      {/* Content — text area for non-todo, item builder for todo */}
+      {type === 'TODO_LIST' ? (
+        <div>
+          <label className="block text-sm font-medium mb-1.5">To-Do Items</label>
+
+          {/* Existing items */}
+          {todoItems.length > 0 && (
+            <ul className="space-y-1.5 mb-3">
+              {todoItems.map((item, i) => (
+                <li key={i} className="flex items-center gap-2 bg-card border border-primary/10 rounded-lg px-3 py-2">
+                  <span className="w-4 h-4 rounded border border-primary/30 shrink-0 bg-background" />
+                  <span className="text-sm flex-1">{item}</span>
+                  <button
+                    type="button"
+                    onClick={() => removeTodoItem(i)}
+                    className="text-muted-foreground hover:text-red-500 transition-colors"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {/* Add item input */}
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={todoInput}
+              onChange={(e) => setTodoInput(e.target.value)}
+              onKeyDown={handleTodoKeyDown}
+              placeholder="Add a task… (Enter to add)"
+              className="flex-1 bg-card border border-primary/20 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+            />
+            <button
+              type="button"
+              onClick={addTodoItem}
+              disabled={!todoInput.trim()}
+              className="flex items-center gap-1.5 bg-muted border border-primary/20 text-foreground text-sm font-medium px-4 py-3 rounded-xl hover:bg-primary/10 transition-colors disabled:opacity-40"
+            >
+              <Plus className="w-4 h-4" />
+              Add
+            </button>
+          </div>
+          {todoItems.length === 0 && (
+            <p className="text-xs text-muted-foreground mt-1.5">Add at least one item to your to-do list.</p>
+          )}
+        </div>
+      ) : (
+        <div>
+          <label className="block text-sm font-medium mb-1.5" htmlFor="sub-content">
+            Content
+          </label>
+          <textarea
+            id="sub-content"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            placeholder="Write your content here…"
+            rows={12}
+            className="w-full bg-card border border-primary/20 rounded-xl px-4 py-3 text-sm resize-y focus:outline-none focus:ring-2 focus:ring-primary/30 leading-relaxed"
+          />
+        </div>
+      )}
 
       {error && <p className="text-sm text-red-500">{error}</p>}
 

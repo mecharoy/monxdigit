@@ -115,7 +115,9 @@ export default async function SubmissionsPage() {
 
                 {/* Card body */}
                 <div className="px-5 py-4">
-                  <p className="text-sm text-muted-foreground whitespace-pre-wrap mb-1">{sub.content}</p>
+                  {sub.type !== 'TODO_LIST' && (
+                    <p className="text-sm text-muted-foreground whitespace-pre-wrap mb-1">{sub.content}</p>
+                  )}
                   <p className="text-xs text-muted-foreground">{formatDate(sub.createdAt)}</p>
 
                   {/* Todo checklist (only for TODO_LIST type) */}

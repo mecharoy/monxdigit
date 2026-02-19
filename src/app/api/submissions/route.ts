@@ -21,15 +21,41 @@ export async function POST(req: Request) {
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const body = await req.json()
-  const { title, type, content } = body
+  const { title, type, content, items } = body
 
-  if (!title?.trim() || !type || !content?.trim()) {
-    return NextResponse.json({ error: 'Title, type, and content are required' }, { status: 400 })
+  if (!title?.trim() || !type) {
+    return NextResponse.json({ error: 'Title and type are required' }, { status: 400 })
   }
 
   const validTypes = ['DOCUMENT', 'TODO_LIST', 'UPDATE', 'MESSAGE']
   if (!validTypes.includes(type)) {
     return NextResponse.json({ error: 'Invalid submission type' }, { status: 400 })
+  }
+
+  if (type === 'TODO_LIST') {
+    const todoItems: string[] = Array.isArray(items) ? items.filter((s: unknown) => typeof s === 'string' && s.trim()) : []
+    if (todoItems.length === 0) {
+      return NextResponse.json({ error: 'At least one to-do item is required' }, { status: 400 })
+    }
+
+    const submission = await prisma.submission.create({
+      data: {
+        title: title.trim(),
+        type,
+        content: todoItems.join('\n'),
+        authorId: user.id,
+        todoItems: {
+          create: todoItems.map((text, i) => ({ text: text.trim(), order: i })),
+        },
+      },
+      include: { todoItems: true },
+    })
+
+    return NextResponse.json(submission, { status: 201 })
+  }
+
+  if (!content?.trim()) {
+    return NextResponse.json({ error: 'Content is required' }, { status: 400 })
   }
 
   const submission = await prisma.submission.create({

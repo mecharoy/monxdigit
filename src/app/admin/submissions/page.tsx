@@ -54,9 +54,11 @@ function SubmissionCard({ sub }: { sub: Submission }) {
         </div>
       </div>
       <div className="px-5 py-4">
-        <pre className="whitespace-pre-wrap text-sm text-muted-foreground font-sans leading-relaxed max-h-48 overflow-y-auto">
-          {sub.content}
-        </pre>
+        {sub.type !== 'TODO_LIST' && (
+          <pre className="whitespace-pre-wrap text-sm text-muted-foreground font-sans leading-relaxed max-h-48 overflow-y-auto">
+            {sub.content}
+          </pre>
+        )}
 
         {/* Todo checklist (only for TODO_LIST type) */}
         {sub.type === 'TODO_LIST' && (
