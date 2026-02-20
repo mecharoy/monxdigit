@@ -44,17 +44,8 @@ export async function POST(req: NextRequest) {
   const buffer = Buffer.from(bytes)
   const originalName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_')
 
-  // Store in DB temporarily under a placeholder submissionId key.
-  // The real submissionId is set when the submission is created.
-  // We use a temp record keyed by a generated id and swap later.
-  const tempId = `temp_${Date.now()}_${Math.random().toString(36).slice(2)}`
-
-  // Store as a pending attachment with tempId as a marker in fileName
   const record = await prisma.fileAttachment.create({
     data: {
-      // submissionId is required — we'll use the tempId as a placeholder
-      // and update it when the submission is created
-      submissionId: tempId,
       fileName: originalName,
       mimeType: file.type,
       data: buffer,
