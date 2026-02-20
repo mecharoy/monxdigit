@@ -18,7 +18,7 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
 
   if (!attachment) return NextResponse.json({ error: 'No file found' }, { status: 404 })
 
-  return new NextResponse(attachment.data, {
+  return new NextResponse(new Uint8Array(attachment.data), {
     headers: {
       'Content-Type': attachment.mimeType,
       'Content-Disposition': `attachment; filename="${attachment.fileName}"`,
