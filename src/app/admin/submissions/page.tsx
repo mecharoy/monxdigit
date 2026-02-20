@@ -1,20 +1,13 @@
-import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { cookies } from 'next/headers'
 import { prisma } from '@/lib/prisma'
 import { LogoutButton } from '@/components/admin/logout-button'
 import { ArrowLeft, Folder } from 'lucide-react'
-
-async function checkAuth() {
-  const cookieStore = await cookies()
-  const auth = cookieStore.get('admin_auth')
-  if (!auth || auth.value !== 'authenticated') redirect('/admin/login')
-}
+import { requireAdmin } from '@/lib/admin-auth'
 
 export const dynamic = 'force-dynamic'
 
 export default async function AdminSubmissionsIndexPage() {
-  await checkAuth()
+  await requireAdmin()
 
   const [pending, reviewed, acknowledged] = await Promise.all([
     prisma.submission.count({ where: { status: 'PENDING' } }),

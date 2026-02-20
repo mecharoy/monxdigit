@@ -1,6 +1,5 @@
-import { redirect, notFound } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { cookies } from 'next/headers'
 import { prisma } from '@/lib/prisma'
 import { formatDateTime } from '@/lib/utils'
 import { LogoutButton } from '@/components/admin/logout-button'
@@ -9,12 +8,7 @@ import { SubmissionThread } from '@/components/submission-thread'
 import { TodoChecklist } from '@/components/todo-checklist'
 import { ArrowLeft, Paperclip } from 'lucide-react'
 import { UserFilter } from '@/components/admin/user-filter'
-
-async function checkAuth() {
-  const cookieStore = await cookies()
-  const auth = cookieStore.get('admin_auth')
-  if (!auth || auth.value !== 'authenticated') redirect('/admin/login')
-}
+import { requireAdmin } from '@/lib/admin-auth'
 
 export const dynamic = 'force-dynamic'
 
@@ -168,7 +162,7 @@ export default async function AdminSubmissionsByStatusPage({
   params: Promise<{ status: string }>
   searchParams: Promise<{ userId?: string }>
 }) {
-  await checkAuth()
+  await requireAdmin()
 
   const { status } = await params
   const { userId } = await searchParams

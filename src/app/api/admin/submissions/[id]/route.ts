@@ -1,16 +1,10 @@
 import { NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
 import { prisma } from '@/lib/prisma'
-
-async function checkAdmin() {
-  const cookieStore = await cookies()
-  const auth = cookieStore.get('admin_auth')
-  return auth?.value === 'authenticated'
-}
+import { isAdminAuthenticated } from '@/lib/admin-auth'
 
 // PUT /api/admin/submissions/[id] — save admin reply
 export async function PUT(req: Request, { params }: { params: { id: string } }) {
-  if (!(await checkAdmin())) {
+  if (!(await isAdminAuthenticated())) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
@@ -31,7 +25,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
 
 // PATCH /api/admin/submissions/[id] — update submission status OR thread state
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
-  if (!(await checkAdmin())) {
+  if (!(await isAdminAuthenticated())) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 

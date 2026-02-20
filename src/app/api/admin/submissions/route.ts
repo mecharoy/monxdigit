@@ -1,16 +1,10 @@
 import { NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
 import { prisma } from '@/lib/prisma'
-
-async function checkAdmin() {
-  const cookieStore = await cookies()
-  const auth = cookieStore.get('admin_auth')
-  return auth?.value === 'authenticated'
-}
+import { isAdminAuthenticated } from '@/lib/admin-auth'
 
 // GET /api/admin/submissions — all submissions (admin only)
 export async function GET() {
-  if (!(await checkAdmin())) {
+  if (!(await isAdminAuthenticated())) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 

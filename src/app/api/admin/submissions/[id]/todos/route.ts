@@ -1,16 +1,10 @@
 import { NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
 import { prisma } from '@/lib/prisma'
-
-async function checkAdmin() {
-  const cookieStore = await cookies()
-  const auth = cookieStore.get('admin_auth')
-  return auth?.value === 'authenticated'
-}
+import { isAdminAuthenticated } from '@/lib/admin-auth'
 
 // GET /api/admin/submissions/[id]/todos — get todo items
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
-  if (!(await checkAdmin())) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!(await isAdminAuthenticated())) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const { id } = await params
 
@@ -24,7 +18,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
 
 // POST /api/admin/submissions/[id]/todos — admin adds a todo item
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  if (!(await checkAdmin())) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!(await isAdminAuthenticated())) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const { id } = await params
 

@@ -1,21 +1,11 @@
-import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { cookies } from 'next/headers'
 import { prisma } from '@/lib/prisma'
 import { formatDateTime } from '@/lib/utils'
 import { LogoutButton } from '@/components/admin/logout-button'
 import { UpdateLeadStatus } from '@/components/admin/update-lead-status'
 import { DeleteLead } from '@/components/admin/delete-lead'
 import { Send } from 'lucide-react'
-
-async function checkAuth() {
-  const cookieStore = await cookies()
-  const auth = cookieStore.get('admin_auth')
-
-  if (!auth || auth.value !== 'authenticated') {
-    redirect('/admin/login')
-  }
-}
+import { requireAdmin } from '@/lib/admin-auth'
 
 async function getLeads() {
   return prisma.lead.findMany({
@@ -24,7 +14,7 @@ async function getLeads() {
 }
 
 export default async function AdminPage() {
-  await checkAuth()
+  await requireAdmin()
   const leads = await getLeads()
 
   const stats = {

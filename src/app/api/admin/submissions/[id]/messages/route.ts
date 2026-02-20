@@ -1,16 +1,10 @@
 import { NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
 import { prisma } from '@/lib/prisma'
-
-async function checkAdmin() {
-  const cookieStore = await cookies()
-  const auth = cookieStore.get('admin_auth')
-  return auth?.value === 'authenticated'
-}
+import { isAdminAuthenticated } from '@/lib/admin-auth'
 
 // GET /api/admin/submissions/[id]/messages — get thread messages
 export async function GET(_req: Request, { params }: { params: { id: string } }) {
-  if (!(await checkAdmin())) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!(await isAdminAuthenticated())) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const messages = await prisma.submissionMessage.findMany({
     where: { submissionId: params.id },
@@ -22,7 +16,7 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
 
 // POST /api/admin/submissions/[id]/messages — admin sends a message
 export async function POST(req: Request, { params }: { params: { id: string } }) {
-  if (!(await checkAdmin())) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!(await isAdminAuthenticated())) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const submission = await prisma.submission.findUnique({ where: { id: params.id } })
   if (!submission) return NextResponse.json({ error: 'Not found' }, { status: 404 })
