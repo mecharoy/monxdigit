@@ -117,7 +117,7 @@ export function TodoChecklist({ submissionId, isAdmin, initialTodos, threadClose
         </ul>
       )}
 
-      {isAdmin && !threadClosed && (
+      {isAdmin && (
         <div className="flex gap-2">
           <input
             type="text"
