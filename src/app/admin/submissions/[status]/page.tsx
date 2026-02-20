@@ -8,6 +8,7 @@ import { UpdateSubmissionStatus } from '@/components/admin/update-submission-sta
 import { SubmissionThread } from '@/components/submission-thread'
 import { TodoChecklist } from '@/components/todo-checklist'
 import { ArrowLeft, Paperclip } from 'lucide-react'
+import { UserFilter } from '@/components/admin/user-filter'
 
 async function checkAuth() {
   const cookieStore = await cookies()
@@ -56,10 +57,10 @@ function getInitials(name: string): string {
 
 type Submission = Awaited<ReturnType<typeof fetchSubmissions>>[number]
 
-async function fetchSubmissions(status: 'PENDING' | 'REVIEWED' | 'ACKNOWLEDGED') {
+async function fetchSubmissions(status: 'PENDING' | 'REVIEWED' | 'ACKNOWLEDGED', authorId?: string) {
   try {
     return await prisma.submission.findMany({
-      where: { status },
+      where: { status, ...(authorId ? { authorId } : {}) },
       orderBy: { createdAt: 'desc' },
       include: {
         author: { select: { name: true, email: true } },
@@ -68,6 +69,20 @@ async function fetchSubmissions(status: 'PENDING' | 'REVIEWED' | 'ACKNOWLEDGED')
         fileAttachment: { select: { id: true, fileName: true } },
       },
     })
+  } catch {
+    return []
+  }
+}
+
+async function fetchUsersWithSubmissions(status: 'PENDING' | 'REVIEWED' | 'ACKNOWLEDGED') {
+  try {
+    const rows = await prisma.submission.findMany({
+      where: { status },
+      select: { author: { select: { id: true, name: true, email: true } } },
+      distinct: ['authorId'],
+      orderBy: { author: { name: 'asc' } },
+    })
+    return rows.map((r) => r.author)
   } catch {
     return []
   }
@@ -148,16 +163,22 @@ function SubmissionCard({ sub }: { sub: Submission }) {
 
 export default async function AdminSubmissionsByStatusPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ status: string }>
+  searchParams: Promise<{ userId?: string }>
 }) {
   await checkAuth()
 
   const { status } = await params
+  const { userId } = await searchParams
   const meta = STATUS_MAP[status as keyof typeof STATUS_MAP]
   if (!meta) notFound()
 
-  const submissions = await fetchSubmissions(meta.db)
+  const [submissions, users] = await Promise.all([
+    fetchSubmissions(meta.db, userId),
+    fetchUsersWithSubmissions(meta.db),
+  ])
 
   return (
     <div className="min-h-screen bg-background">
@@ -178,12 +199,17 @@ export default async function AdminSubmissionsByStatusPage({
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        <div className="flex items-center gap-2.5 mb-6">
-          <div className={`w-2.5 h-2.5 rounded-full ${meta.dotColor} shrink-0`} />
-          <h2 className="font-semibold text-lg">{meta.label}</h2>
-          <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${meta.badgeClass}`}>
-            {submissions.length}
-          </span>
+        <div className="flex items-center justify-between gap-3 mb-6 flex-wrap">
+          <div className="flex items-center gap-2.5">
+            <div className={`w-2.5 h-2.5 rounded-full ${meta.dotColor} shrink-0`} />
+            <h2 className="font-semibold text-lg">{meta.label}</h2>
+            <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${meta.badgeClass}`}>
+              {submissions.length}
+            </span>
+          </div>
+          {users.length > 1 && (
+            <UserFilter users={users} selectedUserId={userId} />
+          )}
         </div>
 
         {submissions.length === 0 ? (

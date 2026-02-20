@@ -43,5 +43,14 @@ export async function POST(req: Request, { params }: { params: { id: string } })
     },
   })
 
+  // If admin has already reviewed/acknowledged, move back to pending
+  // so the admin knows there's a new reply waiting.
+  if (submission.status === 'REVIEWED' || submission.status === 'ACKNOWLEDGED') {
+    await prisma.submission.update({
+      where: { id: params.id },
+      data: { status: 'PENDING' },
+    })
+  }
+
   return NextResponse.json(message, { status: 201 })
 }
